@@ -54,7 +54,7 @@ def findName(name):
             return True
 
 
-def auburn_students():
+def auburn_students(current_month):
     mr = auburn.max_row
     mc = auburn.max_column
     num = findNextCell()
@@ -65,7 +65,7 @@ def auburn_students():
         c = auburn.cell(row=i, column=3).value
         name = auburn.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -145,7 +145,7 @@ def auburn_students():
 # -----------------------------------------------------------------------------Clemson-----------------
 
 
-def clemson_students():
+def clemson_students(current_month):
     mr = clemson.max_row
     mc = clemson.max_column
     num = findNextCell()
@@ -156,7 +156,7 @@ def clemson_students():
         c = clemson.cell(row=i, column=3).value
         name = clemson.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -223,7 +223,7 @@ def clemson_students():
 # -----------------------------------------------------------------------------CSU-----------------
 
 
-def csu_students():
+def csu_students(current_month):
     mr = csu.max_row
     mc = csu.max_column
     num = findNextCell()
@@ -234,7 +234,7 @@ def csu_students():
         c = csu.cell(row=i, column=3).value
         name = csu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -301,7 +301,7 @@ def csu_students():
 # -----------------------------------------------------------------------------LSU-----------------
 
 
-def lsu_students():
+def lsu_students(current_month):
     mr = lsu.max_row
     mc = lsu.max_column
     num = findNextCell()
@@ -312,7 +312,7 @@ def lsu_students():
         c = lsu.cell(row=i, column=3).value
         name = lsu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -378,7 +378,7 @@ def lsu_students():
 # -----------------------------------------------------------------------------MSU-----------------
 
 
-def msu_students():
+def msu_students(current_month):
     mr = msu.max_row
     mc = msu.max_column
     num = findNextCell()
@@ -389,7 +389,7 @@ def msu_students():
         c = msu.cell(row=i, column=3).value
         name = msu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -456,7 +456,7 @@ def msu_students():
 # -----------------------------------------------------------------------------UNH-----------------
 
 
-def unh_students():
+def unh_students(current_month):
     mr = unh.max_row
     mc = unh.max_column
     num = findNextCell()
@@ -467,7 +467,7 @@ def unh_students():
         c = unh.cell(row=i, column=3).value
         name = unh.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -533,7 +533,7 @@ def unh_students():
 # -----------------------------------------------------------------------------TAMUT-----------------
 
 
-def tamu_students():
+def tamu_students(current_month):
     mr = tamu.max_row
     mc = tamu.max_column
     num = findNextCell()
@@ -544,7 +544,7 @@ def tamu_students():
         c = tamu.cell(row=i, column=3).value
         name = tamu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -610,7 +610,7 @@ def tamu_students():
 # -----------------------------------------------------------------------------WKU-----------------
 
 
-def wku_students():
+def wku_students(current_month):
     mr = wku.max_row
     mc = wku.max_column
     num = findNextCell()
@@ -621,7 +621,7 @@ def wku_students():
         c = wku.cell(row=i, column=3).value
         name = wku.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -687,7 +687,7 @@ def wku_students():
 # -----------------------------------------------------------------------------UWLAX-----------------
 
 
-def uwlax_students():
+def uwlax_students(current_month):
     mr = uwlax.max_row
     mc = uwlax.max_column
     num = findNextCell()
@@ -698,7 +698,7 @@ def uwlax_students():
         c = uwlax.cell(row=i, column=3).value
         name = uwlax.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -764,7 +764,7 @@ def uwlax_students():
 # -----------------------------------------------------------------------------DESU-----------------
 
 
-def desu_students():
+def desu_students(current_month):
     mr = desu.max_row
     mc = desu.max_column
     num = findNextCell()
@@ -775,7 +775,7 @@ def desu_students():
         c = desu.cell(row=i, column=3).value
         name = desu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == '03':
+        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -891,7 +891,9 @@ met_programs = dict({
     "childcare specialist": 2999.25,
     "child day care management cert program": 2962.50,
     "event planning entrepreneur": 2962.50,
+    "human resources professional": 2999.25,
     "life skills coach": 2962.50,
+    "marketing professional": 2849.25,
     "mental health technician specialist cert": 2962.50,
     "ophthalmic assistant specialist": 2962.50,
     "paralegal certificate program": 2999.25,
@@ -1032,17 +1034,16 @@ def set_commission(course):
 
 
 def runProgram():
-    auburn_students()
-    clemson_students()
-    csu_students()
-    lsu_students()
-    msu_students()
-    unh_students()
-    tamu_students()
-    wku_students()
-    uwlax_students()
-    desu_students()
+    auburn_students('03')
+    clemson_students('03')
+    csu_students('03')
+    lsu_students('03')
+    msu_students('03')
+    unh_students('03')
+    tamu_students('03')
+    wku_students('03')
+    uwlax_students('03')
+    desu_students('03')
     wb2.save(monthly_spreadsheet)
     wb3.save(jon_email_workbook)
     print("All Done Transferring Students!")
-

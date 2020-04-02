@@ -141,6 +141,13 @@ class Item(object):
             return Decimal(str(2849.25))
         elif self.unit_price == 6999:
             return Decimal(str(5249.25))
+        elif self.unit_price == '3950':
+            return Decimal(str(3061.25))
+        elif self.unit_price == '3999':
+            return Decimal(str(3099.23))
+        elif self.unit_price == '3799':
+            return Decimal(str(2944.23))
+
         return Decimal(str(self.unit_price))
 
 

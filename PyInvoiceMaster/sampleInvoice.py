@@ -51,12 +51,21 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
         percentage = '30%'
     elif school == 'CSU':
         percentage = '25%'
+    elif tuition == 3061.25:
+        tuition = '3950'
+        percentage = '22.5%'
+    elif tuition == 3099.23:
+        tuition = '3999'
+        percentage = '22.5%'
+    elif tuition == 2944.23:
+        tuition = '3799'
+        percentage = '22.5%'
 
     # Add Item
     doc.add_item(Item(start_date, description, tuition, percentage))
 
     # Add Laptop if
-    if tuition < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
+    if int(tuition) < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
         doc.add_item(Item('', 'Laptop', '90', ''))
 
     # Tax rate, optional
@@ -69,5 +78,5 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     doc.finish()
 
 
-# create_invoice('3/13/2020', 'Akoua Vanessa mattox',
-#                'Child Day Care Management Cert Program', 2765, '', 'UWLAX', 8511)
+# create_invoice('03/31/20', 'Lantonette Boothe',
+#                'medical billing and coding with medical administrative assistant', 1370, '', 'AU', 8571)

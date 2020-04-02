@@ -1,13 +1,12 @@
 import openpyxl as xl
 from datetime import datetime
-import os
-
 
 monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
-monthly = wb1.worksheets[0]
+monthly = wb1.worksheets[2]
+
 
 wb2 = xl.load_workbook(filename=mycaa_invoice, read_only=False, keep_vba=True)
 setup_sheet = wb2.worksheets[3]
@@ -62,18 +61,8 @@ def move_to_setup_sheet():
         course = monthly.cell(row=i, column=5).value
         school = monthly.cell(row=i, column=9).value
         invoice_number = monthly.cell(row=i, column=11).value
-        au_price = monthly.cell(row=i, column=13).value
-        met_price = monthly.cell(row=i, column=12).value
-        ed4_price = monthly.cell(row=i, column=12).value
-        wku_price = monthly.cell(row=i, column=17).value
-        lsu_price = monthly.cell(row=i, column=19).value
-        clem_price = monthly.cell(row=i, column=21).value
-        uwlax_price = monthly.cell(row=i, column=22).value
-        csu_price = monthly.cell(row=i, column=25).value
-        tamu_price = monthly.cell(row=i, column=26).value
-        msu_price = monthly.cell(row=i, column=28).value
-        unh_price = monthly.cell(row=i, column=31).value
-        desu_price = monthly.cell(row=i, column=32).value
+        broward_price = monthly.cell(row=i, column=13).value
+        flagler_price = monthly.cell(row=i, column=12).value
 
         if findName(name) != True:
 
@@ -82,44 +71,16 @@ def move_to_setup_sheet():
             setup_sheet.cell(row=num, column=3).value = course
             setup_sheet.cell(row=num, column=4).value = school
             setup_sheet.cell(row=num, column=5).value = invoice_number
-            setup_sheet.cell(row=num, column=7).value = nameCleaner(name)
+            setup_sheet.cell(row=num, column=7).value = name
 
-            if school == "AU":
-                setup_sheet.cell(row=num, column=6).value = au_price
-            elif school == "MET":
-                setup_sheet.cell(row=num, column=6).value = met_price
-            elif school == "AU ED4":
-                setup_sheet.cell(row=num, column=6).value = ed4_price
-            elif school == "WKU":
-                setup_sheet.cell(row=num, column=6).value = wku_price
-            elif school == "LSU":
-                setup_sheet.cell(row=num, column=6).value = lsu_price
-            elif school == "CLEM":
-                setup_sheet.cell(row=num, column=6).value = clem_price
-            elif school == "UWLAX":
-                setup_sheet.cell(row=num, column=6).value = uwlax_price
-            elif school == "CSU":
-                setup_sheet.cell(row=num, column=6).value = csu_price
-            elif school == "TAMU":
-                setup_sheet.cell(row=num, column=6).value = tamu_price
-            elif school == "MSU":
-                setup_sheet.cell(row=num, column=6).value = msu_price
-            elif school == "UNH":
-                setup_sheet.cell(row=num, column=6).value = unh_price
-            elif school == "DESU":
-                setup_sheet.cell(row=num, column=6).value = desu_price
+            if school == "FLAGLER":
+                setup_sheet.cell(row=num, column=6).value = flagler_price
+            elif school == "BROWARD":
+                setup_sheet.cell(row=num, column=6).value = broward_price
             else:
                 print("School doesnt exist")
 
             num += 1
-
-
-def nameCleaner(x):
-    if 'LAPTOP' in x:
-        name, laptop, *rest = x.split('-LAPTOP')
-        return name
-    else:
-        return x
 
 
 def move_to_data_sheet():
@@ -145,16 +106,11 @@ def move_to_data_sheet():
             num += 1
 
 
-def quickEditName():
-    mr = setup_sheet.max_row
-    for i in range(2, mr+1):
-        name = setup_sheet.cell(row=i, column=2).value
-        setup_sheet.cell(row=i, column=7).value = nameCleaner(name)
-    wb2.save(mycaa_invoice)
-
-
 def run_docking_invoices():
     move_to_setup_sheet()
     move_to_data_sheet()
     wb2.save(mycaa_invoice)
-    print("finished docking students")
+    print("Finished Docking E-Learning Students")
+
+
+run_docking_invoices()
