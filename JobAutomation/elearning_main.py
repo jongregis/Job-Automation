@@ -118,7 +118,7 @@ def set_pricing_column(school):
         print("\033[1;31mno school with that name \033[0;0m")
 
 
-def run_program():
+def run_program_elearning():
     start = findNextCell()
     broward_students('04')
     flagler_students('04')
@@ -127,6 +127,3 @@ def run_program():
     total = end-start
     print("Done transferring E-Learning Students")
     print("\033[1;32m{} \033[0;0mwere transferred".format(total))
-
-
-run_program()

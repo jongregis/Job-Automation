@@ -1067,5 +1067,3 @@ def runProgram():
     print("All Done Transferring Students!")
     print("\033[1;32m{} \033[0;0mwere transferred".format(total))
 
-
-runProgram()

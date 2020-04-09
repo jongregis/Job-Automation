@@ -112,5 +112,3 @@ def run_docking_invoices_elearning():
     wb2.save(mycaa_invoice)
     print("\033[1;32mFinished Docking E-Learning Students \033[0;0m")
 
-
-run_docking_invoices_elearning()

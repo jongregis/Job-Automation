@@ -1,5 +1,5 @@
-from sampleInvoice import create_invoice
-from e_learning_invoice import create_invoice_ELearning
+from .sampleInvoice import create_invoice
+from .e_learning_invoice import create_invoice_ELearning
 import openpyxl as xl
 
 
@@ -47,5 +47,3 @@ def excel_to_pdf_ELearning():
 
     print("E-Learning PDF Inovices Done!")
 
-
-excel_to_pdf()

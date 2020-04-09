@@ -1,6 +1,6 @@
 from datetime import datetime, date
-from models import InvoiceInfo, ServiceProviderInfo, ClientInfo, Item, Transaction
-from template import SimpleInvoice
+from .models import InvoiceInfo, ServiceProviderInfo, ClientInfo, Item, Transaction
+from .template import SimpleInvoice
 from dateutil.relativedelta import *
 
 

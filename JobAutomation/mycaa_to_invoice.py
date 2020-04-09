@@ -161,5 +161,3 @@ def run_docking_invoices():
     wb2.save(mycaa_invoice)
     print("\033[1;32mFinished docking MYCAA students \033[0;0m")
 
-
-run_docking_invoices()
