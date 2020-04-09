@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/ECA ALL SCHOOLS MONTHLY SS.xlsx"
 
 
@@ -115,14 +115,18 @@ def set_pricing_column(school):
     elif school == "FLAGLER":
         return 12
     else:
-        print("no school with that name")
+        print("\033[1;31mno school with that name \033[0;0m")
 
 
 def run_program():
-    broward_students('03')
-    flagler_students('03')
+    start = findNextCell()
+    broward_students('04')
+    flagler_students('04')
     wb2.save(monthly_spreadsheet)
+    end = findNextCell()
+    total = end-start
     print("Done transferring E-Learning Students")
+    print("\033[1;32m{} \033[0;0mwere transferred".format(total))
 
 
 run_program()

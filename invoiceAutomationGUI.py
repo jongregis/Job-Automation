@@ -8,8 +8,10 @@
 
 
 from JobAutomation.mycaa_main import runProgram
+from JobAutomation.elearning_main import run_program
 from JobAutomation.mycaa_to_invoice import run_docking_invoices
-from PyInvoiceMaster.main import excel_to_pdf
+from JobAutomation.elearning_to_invoice import run_docking_invoices_elearning
+from PyInvoiceMaster.main import excel_to_pdf, excel_to_pdf_ELearning
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 

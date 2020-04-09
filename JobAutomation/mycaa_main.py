@@ -4,10 +4,10 @@ import os
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL.xlsx"
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
 # assert os.path.exists(pete_spreadsheet)
 
-
+lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
 # fileName = 'test1.xlsx'
 wb1 = xl.load_workbook(pete_spreadsheet)
 auburn = wb1.worksheets[0]
@@ -133,6 +133,10 @@ def auburn_students(current_month):
                         monthly.cell(row=num, column=9).value = 'MET'
                         monthly.cell(row=num, column=set_pricing_column(
                             'MET')).value = set_pricing_met(course)
+                elif vender == 'Pete Medd':
+                    monthly.cell(row=num, column=9).value = 'AU M'
+                    monthly.cell(row=num, column=set_pricing_column(
+                        'MET')).value = set_pricing_met(course)
                 else:
                     monthly.cell(row=num, column=9).value = 'AU ED4'
                     monthly.cell(row=num, column=set_pricing_column(
@@ -855,6 +859,7 @@ cci_programs = dict({
     "finanance professional": 1967,
     "human resources professional": 2029,
     "it cyber security professional with comp tia security +": 2050,
+    "medical administration assistance": 1250,
     "medical billing and coding": 1215,
     "medical billing and coding with medical administrative assistant": 1370,
     "medical billing and coding with medical admin": 1370,
@@ -887,12 +892,19 @@ au_programs = dict({
 met_programs = dict({
     "accounting professional": 2999.25,
     "administrative assistant with quickbooks": 2999.25,
+    "bookeeping with quickbooks": 2849.25,
     "business management professional": 2999.25,
     "childcare specialist": 2999.25,
     "child day care management cert program": 2962.50,
     "event planning entrepreneur": 2962.50,
+    "full stack web developer with mean stack": 2999.25,
     "human resources professional": 2999.25,
     "life skills coach": 2962.50,
+    "massage practitioner program (500 hr)": 4874.25,
+    "massage practitioner program (620 hr)": 5249.25,
+    "massage practitioner program (650 hr)": 5474.25,
+    "massage practitioner program (700 hr)": 6524.25,
+    "massage practitioner program (750 hr)": 5999.25,
     "marketing professional": 2849.25,
     "mental health technician specialist cert": 2962.50,
     "ophthalmic assistant specialist": 2962.50,
@@ -906,6 +918,7 @@ met_programs = dict({
 
 uwlax_programs = dict({
     "clinical medical assistant": 2765,
+    "dental assisting": 2765,
     "dental assisting certification": 2765,
     "medical billing and coding with medical admin": 2765,
     "teachers aide": 2799.30})
@@ -931,8 +944,10 @@ commission = dict({
     "ekg technician cert program": 300,
     "event planning entrepreneur": 300,
     "finanance professional": 500,
+    "full stack web developer with mean stack": None,
     "human resources professional": 500,
     "it cyber security professional with comp tia security +": 500,
+    "medical administration assistance": None,
     "medical billing and coding": 300,
     "medical billing and coding with medical administration": 300,
     "medical billing and coding with medical admin": 300,
@@ -1015,7 +1030,7 @@ def set_pricing_column(school):
     elif school == "DESU":
         return 32
     else:
-        print("no school with that name")
+        print("\033[1;32mno school with that name \033[0;0m")
 
 
 def pete_commission():
@@ -1030,20 +1045,27 @@ def set_commission(course):
     if course in commission:
         return commission[course]
     else:
-        print('no class to set commission')
+        print('\033[1;32mno class to set commission \033[0;0m')
 
 
 def runProgram():
-    auburn_students('03')
-    clemson_students('03')
-    csu_students('03')
-    lsu_students('03')
-    msu_students('03')
-    unh_students('03')
-    tamu_students('03')
-    wku_students('03')
-    uwlax_students('03')
-    desu_students('03')
+    start = findNextCell()
+    auburn_students('04')
+    clemson_students('04')
+    csu_students('04')
+    lsu_students('04')
+    msu_students('04')
+    unh_students('04')
+    tamu_students('04')
+    wku_students('04')
+    uwlax_students('04')
+    desu_students('04')
     wb2.save(monthly_spreadsheet)
     wb3.save(jon_email_workbook)
+    end = findNextCell()
+    total = end-start
     print("All Done Transferring Students!")
+    print("\033[1;32m{} \033[0;0mwere transferred".format(total))
+
+
+runProgram()

@@ -4,10 +4,10 @@ from template import SimpleInvoice
 from dateutil.relativedelta import *
 
 
-def create_invoice(start_date, name, description, tuition, percentage, school, invoice_number):
+def create_invoice_ELearning(start_date, name, description, tuition, percentage, school, invoice_number):
 
     doc = SimpleInvoice(
-        '/Users/jongregis/Python/JobAutomation/practice invoices/MYCAA Invoices/{} {} ({}).pdf'.format(invoice_number, name, school))
+        '/Users/jongregis/Python/JobAutomation/practice invoices/E-Learning Invoices/{} {} ({}).pdf'.format(invoice_number, name, school))
 
     # Paid stamp, optional
     doc.is_paid = True
@@ -35,38 +35,9 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     doc.client_info = ClientInfo(name=name, school=school)
 
     # Calculate Tuition
-    if tuition == 2962.5:
-        tuition = 3950
-        percentage = '25%'
-    elif tuition == 2999.25:
-        tuition = 3999
-        percentage = '25%'
-    elif tuition == 2849.25:
-        tuition = 3799
-        percentage = '25%'
-    elif tuition == 5249.25:
-        tuition = 6999
-        percentage = '25%'
-    elif school == 'UWLAX':
-        percentage = '30%'
-    elif school == 'CSU':
-        percentage = '25%'
-    elif tuition == 3061.25:
-        tuition = '3950'
-        percentage = '22.5%'
-    elif tuition == 3099.23:
-        tuition = '3999'
-        percentage = '22.5%'
-    elif tuition == 2944.23:
-        tuition = '3799'
-        percentage = '22.5%'
 
     # Add Item
-    doc.add_item(Item(start_date, description, tuition, percentage))
-
-    # Add Laptop if
-    if int(tuition) < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
-        doc.add_item(Item('', 'Laptop', '90', ''))
+    doc.add_item(Item(start_date, description, tuition, '35%'))
 
     # Tax rate, optional
     # doc.set_item_tax_rate(20)  # 20%

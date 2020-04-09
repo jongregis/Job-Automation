@@ -3,9 +3,9 @@ from datetime import datetime
 import os
 
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
-
+lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
 wb1 = xl.load_workbook(monthly_spreadsheet)
 monthly = wb1.worksheets[0]
 
@@ -88,6 +88,8 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = au_price
             elif school == "MET":
                 setup_sheet.cell(row=num, column=6).value = met_price
+            elif school == "AU M":
+                setup_sheet.cell(row=num, column=6).value = met_price
             elif school == "AU ED4":
                 setup_sheet.cell(row=num, column=6).value = ed4_price
             elif school == "WKU":
@@ -109,7 +111,7 @@ def move_to_setup_sheet():
             elif school == "DESU":
                 setup_sheet.cell(row=num, column=6).value = desu_price
             else:
-                print("School doesnt exist")
+                print("\033[1;31mSchool doesnt exist!\033[0;0m")
 
             num += 1
 
@@ -157,4 +159,7 @@ def run_docking_invoices():
     move_to_setup_sheet()
     move_to_data_sheet()
     wb2.save(mycaa_invoice)
-    print("finished docking students")
+    print("\033[1;32mFinished docking MYCAA students \033[0;0m")
+
+
+run_docking_invoices()

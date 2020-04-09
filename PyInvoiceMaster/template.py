@@ -8,8 +8,8 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, Spacer
-from .models import PDFInfo, Item, Transaction, InvoiceInfo, ServiceProviderInfo, ClientInfo
-from .components import SimpleTable, TableWithHeader, PaidStamp
+from models import PDFInfo, Item, Transaction, InvoiceInfo, ServiceProviderInfo, ClientInfo
+from components import SimpleTable, TableWithHeader, PaidStamp
 
 
 class SimpleInvoice(SimpleDocTemplate):

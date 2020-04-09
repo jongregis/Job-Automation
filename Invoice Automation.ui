@@ -16,6 +16,27 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QPushButton" name="MYCAAcollectStudentsBTN">
+      <property name="text">
+       <string>Run Students Collection (MYCAA)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="MYCAAstudentsToDockingBTN">
+      <property name="text">
+       <string>Run Students To Docking (MYCAA)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="MYCAApdfInvoiceCreatorBTN">
+      <property name="text">
+       <string>Run PDF Invoice Creator (MYCAA)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="title">
       <property name="font">
        <font>
@@ -31,23 +52,23 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="collectStudentsBTN">
+     <widget class="QPushButton" name="pushButton_3">
       <property name="text">
-       <string>Run Students Collection (MYCAA)</string>
+       <string>Run Students Collection (E-Learning)</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="studentsToDockingBTN">
+     <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Run Students To Docking (MYCAA)</string>
+       <string>Run Students To Docking (E-Learning)</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pdfInvoiceCreatorBTN">
+     <widget class="QPushButton" name="pushButton_2">
       <property name="text">
-       <string>Run PDF Invoice Creator (MYCAA)</string>
+       <string>Run PDF Invoice Creator (E-Learning)</string>
       </property>
      </widget>
     </item>
