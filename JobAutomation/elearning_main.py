@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/ECA ALL SCHOOLS MONTHLY SS.xlsx"
 
 
@@ -68,6 +68,8 @@ def broward_students(current_month):
 
                 num += 1
 
+    wb2.save(monthly_spreadsheet)
+
 
 def flagler_students(current_month):
     mr = flagler.max_row
@@ -107,6 +109,8 @@ def flagler_students(current_month):
 
                 num += 1
 
+    wb2.save(monthly_spreadsheet)
+
 
 def set_pricing_column(school):
 
@@ -120,8 +124,8 @@ def set_pricing_column(school):
 
 def run_program_elearning():
     start = findNextCell()
-    broward_students('04')
-    flagler_students('04')
+    broward_students('05')
+    flagler_students('05')
     wb2.save(monthly_spreadsheet)
     end = findNextCell()
     total = end-start

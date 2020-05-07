@@ -7,7 +7,7 @@ from dateutil.relativedelta import *
 def create_invoice_ELearning(start_date, name, description, tuition, percentage, school, invoice_number):
 
     doc = SimpleInvoice(
-        '/Users/jongregis/Python/JobAutomation/practice invoices/E-Learning Invoices/{} {} ({}).pdf'.format(invoice_number, name, school))
+        '/Users/jongregis/Python/JobAutomation/practice invoices/E-Learning Invoices/E-L {} {} ({}).pdf'.format(invoice_number, name, school))
 
     # Paid stamp, optional
     doc.is_paid = True
@@ -49,5 +49,5 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
     doc.finish()
 
 
-# create_invoice('03/31/20', 'Lantonette Boothe',
-#                'medical billing and coding with medical administrative assistant', 1370, '', 'AU', 8571)
+# create_invoice_ELearning('4/17/2020', 'Ivy Scott',
+#                          'Writing Professional ', 1917, '', 'DESU', 16)

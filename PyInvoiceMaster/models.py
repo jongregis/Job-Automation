@@ -133,20 +133,30 @@ class Item(object):
 
     @property
     def amount(self):
-        if self.unit_price == 3950:
+        if self.unit_price == 3950 and self.percentage == '25%':
             return Decimal(str(2962.5))
-        elif self.unit_price == 3999:
+        elif self.unit_price == 3999 and self.percentage == '25%':
             return Decimal(str(2999.25))
-        elif self.unit_price == 3799:
+        elif self.unit_price == 3799 and self.percentage == '25%':
             return Decimal(str(2849.25))
-        elif self.unit_price == 6999:
-            return Decimal(str(5249.25))
+        elif self.unit_price == 4000 and self.percentage == '25%':
+            return Decimal(str(3000))
         elif self.unit_price == '3950':
             return Decimal(str(3061.25))
         elif self.unit_price == '3999':
             return Decimal(str(3099.23))
         elif self.unit_price == '3799':
             return Decimal(str(2944.23))
+        elif self.percentage == '30%' and self.unit_price == 3950:
+            return Decimal(str(2765))
+        elif self.percentage == '30%' and self.unit_price == 3999:
+            return Decimal(str(2799.30))
+        elif self.percentage == '30%' and self.unit_price == 3850:
+            return Decimal(str(2695))
+        elif self.unit_price == 6499:
+            return Decimal(str(4874.25))
+        elif self.unit_price == 7299:
+            return Decimal(str(5656.73))
 
         return Decimal(str(self.unit_price))
 

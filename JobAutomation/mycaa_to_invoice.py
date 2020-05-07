@@ -3,9 +3,9 @@ from datetime import datetime
 import os
 
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
-lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
+lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
 wb1 = xl.load_workbook(monthly_spreadsheet)
 monthly = wb1.worksheets[0]
 
@@ -117,7 +117,7 @@ def move_to_setup_sheet():
 
 
 def nameCleaner(x):
-    if 'LAPTOP' in x:
+    if 'LAPTOP' or 'LARPTOP' in x:
         name, laptop, *rest = x.split('-LAPTOP')
         return name
     else:
@@ -160,4 +160,3 @@ def run_docking_invoices():
     move_to_data_sheet()
     wb2.save(mycaa_invoice)
     print("\033[1;32mFinished docking MYCAA students \033[0;0m")
-

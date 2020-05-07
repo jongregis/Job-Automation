@@ -3,11 +3,11 @@ from datetime import datetime
 import os
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
-pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL.xlsx"
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
+pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 # assert os.path.exists(pete_spreadsheet)
 
-lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/March 2020.xlsx"
+lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
 # fileName = 'test1.xlsx'
 wb1 = xl.load_workbook(pete_spreadsheet)
 auburn = wb1.worksheets[0]
@@ -20,6 +20,7 @@ tamu = wb1.worksheets[7]
 wku = wb1.worksheets[8]
 uwlax = wb1.worksheets[9]
 desu = wb1.worksheets[10]
+tamiu = wb1.worksheets[12]
 
 fileName1 = 'test2.xlsx'
 wb2 = xl.load_workbook(monthly_spreadsheet)
@@ -60,12 +61,13 @@ def auburn_students(current_month):
     num = findNextCell()
     num1 = findNextCellJonEmail()
 
-    for i in range(5961, mr+1):
+    for i in range(6060, mr+1):
 
         c = auburn.cell(row=i, column=3).value
         name = auburn.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -145,6 +147,8 @@ def auburn_students(current_month):
                 num += 1
                 num1 += 1
 
+    wb2.save(monthly_spreadsheet)
+
 
 # -----------------------------------------------------------------------------Clemson-----------------
 
@@ -160,7 +164,7 @@ def clemson_students(current_month):
         c = clemson.cell(row=i, column=3).value
         name = clemson.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -224,6 +228,8 @@ def clemson_students(current_month):
                 num += 1
                 num1 += 1
 
+    wb2.save(monthly_spreadsheet)
+
 # -----------------------------------------------------------------------------CSU-----------------
 
 
@@ -238,7 +244,7 @@ def csu_students(current_month):
         c = csu.cell(row=i, column=3).value
         name = csu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -302,6 +308,8 @@ def csu_students(current_month):
                 num += 1
                 num1 += 1
 
+    wb2.save(monthly_spreadsheet)
+
 # -----------------------------------------------------------------------------LSU-----------------
 
 
@@ -316,7 +324,7 @@ def lsu_students(current_month):
         c = lsu.cell(row=i, column=3).value
         name = lsu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -379,6 +387,8 @@ def lsu_students(current_month):
 
                 num += 1
                 num1 += 1
+
+    wb2.save(monthly_spreadsheet)
 # -----------------------------------------------------------------------------MSU-----------------
 
 
@@ -393,7 +403,7 @@ def msu_students(current_month):
         c = msu.cell(row=i, column=3).value
         name = msu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -457,6 +467,8 @@ def msu_students(current_month):
                 num += 1
                 num1 += 1
 
+    wb2.save(monthly_spreadsheet)
+
 # -----------------------------------------------------------------------------UNH-----------------
 
 
@@ -471,7 +483,7 @@ def unh_students(current_month):
         c = unh.cell(row=i, column=3).value
         name = unh.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -534,6 +546,8 @@ def unh_students(current_month):
 
                 num += 1
                 num1 += 1
+
+    wb2.save(monthly_spreadsheet)
 # -----------------------------------------------------------------------------TAMUT-----------------
 
 
@@ -548,7 +562,7 @@ def tamu_students(current_month):
         c = tamu.cell(row=i, column=3).value
         name = tamu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -611,6 +625,8 @@ def tamu_students(current_month):
 
                 num += 1
                 num1 += 1
+
+    wb2.save(monthly_spreadsheet)
 # -----------------------------------------------------------------------------WKU-----------------
 
 
@@ -625,7 +641,7 @@ def wku_students(current_month):
         c = wku.cell(row=i, column=3).value
         name = wku.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -688,6 +704,8 @@ def wku_students(current_month):
 
                 num += 1
                 num1 += 1
+
+    wb2.save(monthly_spreadsheet)
 # -----------------------------------------------------------------------------UWLAX-----------------
 
 
@@ -702,7 +720,7 @@ def uwlax_students(current_month):
         c = uwlax.cell(row=i, column=3).value
         name = uwlax.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -765,6 +783,7 @@ def uwlax_students(current_month):
 
                 num += 1
                 num1 += 1
+    wb2.save(monthly_spreadsheet)
 # -----------------------------------------------------------------------------DESU-----------------
 
 
@@ -779,7 +798,7 @@ def desu_students(current_month):
         c = desu.cell(row=i, column=3).value
         name = desu.cell(row=i, column=9).value
         last_number_row = num - 1
-        if c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
@@ -842,6 +861,85 @@ def desu_students(current_month):
 
                 num += 1
                 num1 += 1
+    wb2.save(monthly_spreadsheet)
+# ----------------------------------------------TAMIU-------------------------------------------------
+
+
+def tamiu_students(current_month):
+    mr = tamiu.max_row
+    mc = tamiu.max_column
+    num = findNextCell()
+    num1 = findNextCellJonEmail()
+
+    for i in range(9, mr+1):
+
+        c = tamiu.cell(row=i, column=3).value
+        name = tamiu.cell(row=i, column=9).value
+        last_number_row = num - 1
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+            if findName(name) != True:
+                # place invoice number
+                last_invoice_number = monthly.cell(
+                    row=last_number_row, column=11).value
+                monthly.cell(row=num, column=11).value = last_invoice_number+1
+                # place first date
+                date1 = tamiu.cell(row=i, column=1).value
+                date1 = date1.strftime('%m') + '/' + \
+                    date1.strftime('%d') + '/' + date1.strftime('%-y')
+                monthly.cell(row=num, column=2).value = date1
+
+                date2 = tamiu.cell(row=i, column=3).value
+                date2 = date2.strftime('%m') + '/' + \
+                    date2.strftime('%d') + '/' + date2.strftime('%-y')
+                monthly.cell(row=num, column=3).value = date2
+
+                date3 = tamiu.cell(row=i, column=4).value
+                date3 = date3.strftime('%m') + '/' + \
+                    date3.strftime('%d') + '/' + date3.strftime('%-y')
+                jon_sheet.cell(row=num1, column=3).value = date3
+
+                address = tamiu.cell(row=i, column=7).value
+                monthly.cell(row=num, column=14).value = address
+
+                email = tamiu.cell(row=i, column=8).value
+                jon_sheet.cell(row=num1, column=2).value = email
+
+                if 'LAPTOP' in name:
+                    monthly.cell(row=num, column=8).value = 'x'
+                monthly.cell(row=num, column=4).value = name
+                jon_sheet.cell(row=num1, column=1).value = name
+
+                course = tamiu.cell(row=i, column=10).value
+                course = course.strip().lower()
+                monthly.cell(row=num, column=5).value = course
+
+                code = tamiu.cell(row=i, column=11).value
+                monthly.cell(row=num, column=9).value = code
+
+                rep = tamiu.cell(row=i, column=12).value
+                rep = rep.strip().lower()
+                monthly.cell(row=num, column=6).value = rep
+
+                # setting commision for pete
+                if rep == "maie":
+                    monthly.cell(row=num, column=7).value = None
+                elif rep == "pete code lead" and pete_commission() > 5:
+                    monthly.cell(row=num, column=7).value = 75
+                elif rep == "pete code lead" and pete_commission() <= 5:
+                    monthly.cell(row=num, column=7).value = 'x'
+                else:
+                    monthly.cell(
+                        row=num, column=7).value = set_commission(course)
+
+                vender = tamiu.cell(row=i, column=13).value
+                jon_sheet.cell(row=num1, column=4).value = vender
+                monthly.cell(row=num, column=9).value = 'TAMIU'
+                monthly.cell(row=num, column=set_pricing_column(
+                    'TAMIU')).value = set_pricing_cci(course)
+
+                num += 1
+                num1 += 1
+    wb2.save(monthly_spreadsheet)
 
 
 # Dictionaries
@@ -857,19 +955,27 @@ cci_programs = dict({
     "dental assisting": 1825,
     "ekg technician cert program": 1250,
     "finanance professional": 1967,
+    "finance professional": 1967,
     "human resources professional": 2029,
     "it cyber security professional with comp tia security +": 2050,
     "medical administration assistance": 1250,
+    "medical administrative assistant online": 1250,
+    "medical administrative assistant online": 1250,
     "medical billing and coding": 1215,
     "medical billing and coding with medical administrative assistant": 1370,
     "medical billing and coding with medical admin": 1370,
     "medical billing and coding with medical administration": 1370,
     "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
+    "organizational behavior professional": 2090,
     "paralegal": 1699,
+    "paralegal certificate program": 1699,
     "pharmacy technician": 1200,
     "pharmacy technician with medical administration": 1400,
+    "pharmacy tech with med admin": 1400,
     "phlebotomy technician": 1575,
+    "phlebotomy tech -spanish": 1575,
     "photography entrepreneur with adobe certificate": 1850,
+    "photography entrepreneur with adobe": 1850,
     "teachers aide": 2029,
     "veterinary assistant specialist": 1013, })
 
@@ -886,12 +992,14 @@ au_programs = dict({
     "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
     "pharmacy technician": 1200,
     "pharmacy technician with medical administration": 1400,
+    "pharmacy technician with medical admin online inc. national cert. and clinical ext.": 1400,
     "phlebotomy technician": 1575,
     "veterinary assistant specialist": 1013, })
 
 met_programs = dict({
     "accounting professional": 2999.25,
     "administrative assistant with quickbooks": 2999.25,
+    "administrative assistant with bookkeeping and quickbooks": 2999.25,
     "bookeeping with quickbooks": 2849.25,
     "business management professional": 2999.25,
     "childcare specialist": 2999.25,
@@ -899,14 +1007,18 @@ met_programs = dict({
     "event planning entrepreneur": 2962.50,
     "full stack web developer with mean stack": 2999.25,
     "human resources professional": 2999.25,
+    "interior decorating and design entrepreneur": 2962.50,
+    "it cyber security professional with comp tia security+": 2999.25,
+    "it network professional with comptia network+": 2999.25,
     "life skills coach": 2962.50,
-    "massage practitioner program (500 hr)": 4874.25,
-    "massage practitioner program (620 hr)": 5249.25,
-    "massage practitioner program (650 hr)": 5474.25,
-    "massage practitioner program (700 hr)": 6524.25,
-    "massage practitioner program (750 hr)": 5999.25,
+    "massage practitioner program (500 hr)": 3000,
+    "massage practitioner program (620 hr)": 3000,
+    "massage practitioner program (650 hr)": 3000,
+    "massage practitioner program (700 hr)": 3000,
+    "massage practitioner program (750 hr)": 3000,
     "marketing professional": 2849.25,
     "mental health technician specialist cert": 2962.50,
+    "nutrition and fitness professional": 2962.50,
     "ophthalmic assistant specialist": 2962.50,
     "paralegal certificate program": 2999.25,
     "patient advocate specialist": 2962.50,
@@ -914,14 +1026,19 @@ met_programs = dict({
     "photography entrepreneur with adobe certificate": 2962.50,
     "photography entrepreneur with adobe": 2962.50,
     "physical therapy aide": 2962.50,
-    "teachers aide": 2999.25})
+    "professional cooking and catering": 2962.50,
+    "teachers aide": 2999.25,
+    "wedding consultant entrepreneur": 2962.50})
 
 uwlax_programs = dict({
     "clinical medical assistant": 2765,
     "dental assisting": 2765,
     "dental assisting certification": 2765,
     "medical billing and coding with medical admin": 2765,
-    "teachers aide": 2799.30})
+    "pharmacy technician with medical administration": 2765,
+    "physicians office assistant with ehrm": 2765,
+    "teachers aide": 2799.30,
+    "veterinary assistant": 2695})
 
 csu_programs = dict({
     "clinical medical assistant": 2962.50,
@@ -1030,13 +1147,13 @@ def set_pricing_column(school):
     elif school == "DESU":
         return 32
     else:
-        print("\033[1;32mno school with that name \033[0;0m")
+        print("\033[1;31mno school with that name \033[0;0m")
 
 
 def pete_commission():
     num = 0
     for cell in monthly["F"]:
-        if cell.value == "pete code lead":
+        if cell.value == "pete code lead" or 'pete':
             num += 1
     return num
 
@@ -1045,25 +1162,27 @@ def set_commission(course):
     if course in commission:
         return commission[course]
     else:
-        print('\033[1;32mno class to set commission \033[0;0m')
+        print('')
 
 
 def runProgram():
     start = findNextCell()
-    auburn_students('04')
-    clemson_students('04')
-    csu_students('04')
-    lsu_students('04')
-    msu_students('04')
-    unh_students('04')
-    tamu_students('04')
-    wku_students('04')
-    uwlax_students('04')
-    desu_students('04')
+    auburn_students('05')
+    clemson_students('05')
+    csu_students('05')
+    lsu_students('05')
+    msu_students('05')
+    unh_students('05')
+    tamu_students('05')
+    wku_students('05')
+    uwlax_students('05')
+    desu_students('05')
     wb2.save(monthly_spreadsheet)
     wb3.save(jon_email_workbook)
     end = findNextCell()
     total = end-start
-    print("All Done Transferring Students!")
+    print("\033[1;32mAll Done Transferring Students!\033[0;0m")
     print("\033[1;32m{} \033[0;0mwere transferred".format(total))
 
+
+# findNextCellPete(auburn)

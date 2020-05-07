@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/ELearning Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
@@ -111,4 +111,3 @@ def run_docking_invoices_elearning():
     move_to_data_sheet()
     wb2.save(mycaa_invoice)
     print("\033[1;32mFinished Docking E-Learning Students \033[0;0m")
-

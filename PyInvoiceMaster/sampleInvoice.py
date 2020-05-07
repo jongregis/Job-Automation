@@ -44,11 +44,18 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     elif tuition == 2849.25:
         tuition = 3799
         percentage = '25%'
-    elif tuition == 5249.25:
-        tuition = 6999
+    elif tuition == 3000:
+        tuition = 4000
         percentage = '25%'
-    elif school == 'UWLAX':
+    elif school == 'UWLAX' and tuition == 2765:
         percentage = '30%'
+        tuition = 3950
+    elif school == 'UWLAX' and tuition == 2799.30:
+        percentage = '30%'
+        tuition = 3999
+    elif school == 'UWLAX' and tuition == 2695:
+        percentage = '30%'
+        tuition = 3850
     elif school == 'CSU':
         percentage = '25%'
     elif tuition == 3061.25:
@@ -60,6 +67,12 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     elif tuition == 2944.23:
         tuition = '3799'
         percentage = '22.5%'
+    elif tuition == 4874.25:
+        percentage = '25%'
+        tuition = 6499
+    elif tuition == 5656.73:
+        percentage = '22.5%'
+        tuition = 7299
 
     # Add Item
     doc.add_item(Item(start_date, description, tuition, percentage))
@@ -78,5 +91,5 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     doc.finish()
 
 
-# create_invoice('03/31/20', 'Lantonette Boothe',
-#                'medical billing and coding with medical administrative assistant', 1370, '', 'AU', 8571)
+# create_invoice('4/1/2020', 'Cyndi Diggins',
+#                'PRIVATE PAY-PIF(Massage)', 5656.73, '', 'AU M PP', 17)
