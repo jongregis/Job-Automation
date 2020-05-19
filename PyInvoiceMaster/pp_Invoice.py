@@ -4,10 +4,10 @@ from .template import SimpleInvoice
 from dateutil.relativedelta import *
 
 
-def create_invoice_ELearning(start_date, name, description, tuition, percentage, school, invoice_number):
+def create_invoice_PrivatePay(start_date, name, description, tuition, percentage, school, invoice_number):
 
     doc = SimpleInvoice(
-        '/Users/jongregis/Python/JobAutomation/practice invoices/E-Learning Invoices/E-L {} {} ({}).pdf'.format(invoice_number, name, school))
+        '/Users/jongregis/Python/JobAutomation/practice invoices/PP Invoices/PP {} {} ({}).pdf'.format(invoice_number, name, school))
 
     # Paid stamp, optional
     doc.is_paid = True
@@ -35,9 +35,15 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
     doc.client_info = ClientInfo(name=name, school=school)
 
     # Calculate Tuition
+    if tuition == 5474.25:
+        tuition = 7299
+        percentage = '25%'
+    elif tuition == 5656.73:
+        tuition = 7299
+        percentage = '22.5%'
 
     # Add Item
-    doc.add_item(Item(start_date, description, tuition, '35%'))
+    doc.add_item(Item(start_date, description, tuition, percentage))
 
     # Tax rate, optional
     # doc.set_item_tax_rate(20)  # 20%
@@ -49,5 +55,5 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
     doc.finish()
 
 
-# create_invoice_ELearning('5/12/2020', 'Keith Hoke',
-#                          'Project Management Specialist for CAPM', 1969, '', 'DESU', 21)
+# create_invoice_PrivatePay('5/12/2020', 'Jennifer Bartlett Phelps',
+#                          'PRIVATE PAY-PIF(Paid in Full)', 1969, '', 'DESU', 21)

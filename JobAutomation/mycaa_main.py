@@ -1,6 +1,8 @@
 import openpyxl as xl
 from datetime import datetime
 import os
+from difflib import SequenceMatcher
+import Levenshtein
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
@@ -53,6 +55,20 @@ def findName(name):
     for cell in monthly["D"]:
         if cell.value == name:
             return True
+
+
+def findMissingClass(dictionary, wrong):
+    num = 0
+    name = ''
+    for key in dictionary:
+        # print(SequenceMatcher(None, key, 'veterinary assistant specialist').ratio())
+        ratio = Levenshtein.ratio(key, wrong)
+        if ratio > num:
+            num = ratio
+            name = key
+    print(
+        f'Smart lookup finished. \033[1;32m{num}%\033[0;0m that \033[1;33m{wrong}\033[0;0m is \033[1;32m{name}\033[0;0m')
+    return dictionary[name]
 
 
 def auburn_students(current_month):
@@ -947,6 +963,7 @@ cci_programs = dict({
     "accounting professional": 2016,
     "administrative assistant with quickbooks": 1748,
     "bookkeeping with quickbooks": 1733,
+    "business management professional": 1948,
     "childcare specialist": 1942,
     "clinical medical assistant": 1405,
     "clinical medical assistant with ob/gyn": 1405,
@@ -959,6 +976,7 @@ cci_programs = dict({
     "human resources professional": 2029,
     "it cyber security professional with comp tia security +": 2050,
     "medical administration assistance": 1250,
+    "medical administrative assistant": 1250,
     "medical administrative assistant online": 1250,
     "medical administrative assistant online": 1250,
     "medical billing and coding": 1215,
@@ -1004,8 +1022,10 @@ met_programs = dict({
     "business management professional": 2999.25,
     "childcare specialist": 2999.25,
     "child day care management cert program": 2962.50,
+    "drug and alcohol counselor": 2962.50,
     "event planning entrepreneur": 2962.50,
     "full stack web developer with mean stack": 2999.25,
+    "health & fitness industry professional": 2962.50,
     "human resources professional": 2999.25,
     "interior decorating and design entrepreneur": 2962.50,
     "it cyber security professional with comp tia security+": 2999.25,
@@ -1027,7 +1047,9 @@ met_programs = dict({
     "photography entrepreneur with adobe": 2962.50,
     "physical therapy aide": 2962.50,
     "professional cooking and catering": 2962.50,
+    "real estate law professional": 2849.25,
     "teachers aide": 2999.25,
+    "travel agent specialist": 2962.50,
     "wedding consultant entrepreneur": 2962.50})
 
 uwlax_programs = dict({
@@ -1087,8 +1109,10 @@ def set_pricing_cci(course):
     if course in cci_programs:
 
         return cci_programs[course]
+        print(cci_programs[course])
     else:
-        print("No class, update pricing for cci")
+        print("\033[1;31mNo class found for CCI, smart update started... \033[0;0m")
+        return findMissingClass(cci_programs, course)
 
 
 def set_pricing_au(course):
@@ -1096,28 +1120,36 @@ def set_pricing_au(course):
 
         return au_programs[course]
     else:
-        print("No class update pricing for au")
+        print(
+            "\033[1;31mNo class update pricing for au, smart update started... \033[0;0m")
+        return findMissingClass(au_programs, course)
 
 
 def set_pricing_met(course):
     if course in met_programs:
         return met_programs[course]
     else:
-        print("No class update pricing for met")
+        print(
+            "\033[1;31mNo class update pricing for met, smart update started... \033[0;0m")
+        return findMissingClass(met_programs, course)
 
 
 def set_pricing_uwlax(course):
     if course in uwlax_programs:
         return uwlax_programs[course]
     else:
-        print("No class update pricing for uwlax")
+        print(
+            "\033[1;31mNo class update pricing for uwlax, smart update started... \033[0;0m")
+        return findMissingClass(uwlax_programs, course)
 
 
 def set_pricing_csu(course):
     if course in csu_programs:
         return csu_programs[course]
     else:
-        print("No class, update pricing for csu")
+        print(
+            "\033[1;31mNo class, update pricing for csu, smart update started... \033[0;0m")
+        return findMissingClass(csu_programs, course)
 
 
 def set_pricing_column(school):
@@ -1186,3 +1218,4 @@ def runProgram():
 
 
 # findNextCellPete(auburn)
+# set_pricing_cci('Veteriary Assistant')

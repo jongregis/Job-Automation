@@ -155,8 +155,10 @@ class Item(object):
             return Decimal(str(2695))
         elif self.unit_price == 6499:
             return Decimal(str(4874.25))
-        elif self.unit_price == 7299:
+        elif self.unit_price == 7299 and self.percentage == '22.5%':
             return Decimal(str(5656.73))
+        elif self.unit_price == 7299 and self.percentage == '25%':
+            return Decimal(str(5474.25))
 
         return Decimal(str(self.unit_price))
 

@@ -30,15 +30,15 @@ def findName(name):
             return True
 
 
-def broward_students(current_month):
-    mr = broward.max_row
-    mc = broward.max_column
+def school_tab(current_month, school, schoolString, rowNumber):
+    mr = school.max_row
+    mc = school.max_column
     num = findNextCell()
 
-    for i in range(9, mr+1):
+    for i in range(rowNumber, mr+1):
 
-        c = broward.cell(row=i, column=3).value
-        name = broward.cell(row=i, column=1).value
+        c = school.cell(row=i, column=3).value
+        name = school.cell(row=i, column=1).value
         last_number_row = num - 1
         if c == None:
             pass
@@ -50,7 +50,7 @@ def broward_students(current_month):
                     row=last_number_row, column=11).value
                 monthly.cell(row=num, column=11).value = last_invoice_number+1
                 # place first date
-                date1 = broward.cell(row=i, column=3).value
+                date1 = school.cell(row=i, column=3).value
                 date1 = date1.strftime('%m') + '/' + \
                     date1.strftime('%d') + '/' + date1.strftime('%-y')
                 monthly.cell(row=num, column=2).value = date1
@@ -58,54 +58,13 @@ def broward_students(current_month):
 
                 monthly.cell(row=num, column=4).value = name
 
-                course = broward.cell(row=i, column=7).value
+                course = school.cell(row=i, column=7).value
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
 
-                monthly.cell(row=num, column=9).value = 'BROWARD'
+                monthly.cell(row=num, column=9).value = schoolString
                 monthly.cell(row=num, column=set_pricing_column(
-                    'BROWARD')).value = broward.cell(row=i, column=9).value
-
-                num += 1
-
-    wb2.save(monthly_spreadsheet)
-
-
-def flagler_students(current_month):
-    mr = flagler.max_row
-    mc = flagler.max_column
-    num = findNextCell()
-
-    for i in range(9, mr+1):
-
-        c = flagler.cell(row=i, column=3).value
-        name = flagler.cell(row=i, column=1).value
-        last_number_row = num - 1
-        if c == None:
-            pass
-        elif c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = flagler.cell(row=i, column=3).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-                monthly.cell(row=num, column=3).value = date1
-
-                monthly.cell(row=num, column=4).value = name
-
-                course = flagler.cell(row=i, column=8).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                monthly.cell(row=num, column=9).value = 'FLAGLER'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'FLAGLER')).value = flagler.cell(row=i, column=10).value
+                    schoolString)).value = school.cell(row=i, column=9).value
 
                 num += 1
 
@@ -124,8 +83,8 @@ def set_pricing_column(school):
 
 def run_program_elearning():
     start = findNextCell()
-    broward_students('05')
-    flagler_students('05')
+    school_tab('05', broward, 'BROWARD', 9)
+    school_tab('05', flagler, 'FLAGLER', 9)
     wb2.save(monthly_spreadsheet)
     end = findNextCell()
     total = end-start

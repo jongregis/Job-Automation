@@ -1,16 +1,22 @@
 from .sampleInvoice import create_invoice
 from .e_learning_invoice import create_invoice_ELearning
+from .pp_Invoice import create_invoice_PrivatePay
 import openpyxl as xl
 
 
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
 elearning_invoices = "/Users/jongregis/Python/JobAutomation/JobAutomation/ELearning Automation.xlsm"
+privatePay_invoices = "/Users/jongregis/Python/JobAutomation/JobAutomation/PP Automation.xlsm"
 wb2 = xl.load_workbook(filename=mycaa_invoice, read_only=False, keep_vba=True)
 wb3 = xl.load_workbook(filename=elearning_invoices,
+                       read_only=False, keep_vba=True)
+wb4 = xl.load_workbook(filename=privatePay_invoices,
                        read_only=False, keep_vba=True)
 
 data_sheet = wb2.worksheets[1]
 elearning_sheet = wb3.worksheets[1]
+privatePay_sheet = wb4.worksheets[1]
+
 
 # MYCAA main run for invoice creation
 
@@ -47,3 +53,19 @@ def excel_to_pdf_ELearning():
 
     print("E-Learning PDF Inovices Done!")
 
+
+def excel_to_pdf_PrivatePay():
+    mr = privatePay_sheet.max_row
+
+    for i in range(2, mr+1):
+        start_date = privatePay_sheet.cell(row=i, column=1).value
+        name = privatePay_sheet.cell(row=i, column=2).value
+        description = privatePay_sheet.cell(row=i, column=3).value
+        school = privatePay_sheet.cell(row=i, column=4).value
+        invoice_number = privatePay_sheet.cell(row=i, column=5).value
+        total = privatePay_sheet.cell(row=i, column=6).value
+        create_invoice_PrivatePay(start_date, name, description,
+                                  total, '', school, invoice_number)
+        print(name)
+
+    print("Private Pay PDF Inovices Done!")

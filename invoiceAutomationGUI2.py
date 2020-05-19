@@ -2,9 +2,11 @@
 
 from JobAutomation.mycaa_main import runProgram
 from JobAutomation.elearning_main import run_program_elearning
+from JobAutomation.privatePay_main import run_program_privatePay
 from JobAutomation.mycaa_to_invoice import run_docking_invoices
 from JobAutomation.elearning_to_invoice import run_docking_invoices_elearning
-from PyInvoiceMaster.main import excel_to_pdf, excel_to_pdf_ELearning
+from JobAutomation.privatePay_to_invoice import run_docking_invoices_privatePay
+from PyInvoiceMaster.main import excel_to_pdf, excel_to_pdf_ELearning, excel_to_pdf_PrivatePay
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
@@ -53,6 +55,26 @@ class Ui_MainWindow(object):
         self.ElearningpdfInvoiceCreatorBTN.setObjectName(
             "ElearningpdfInvoiceCreatorBTN")
         self.verticalLayout.addWidget(self.ElearningpdfInvoiceCreatorBTN)
+
+        # PrivatePay
+        self.title.setObjectName("title")
+        self.verticalLayout.addWidget(self.title)
+        self.PrivatePayCollectStudentsBTN = QtWidgets.QPushButton(
+            self.centralwidget)
+        self.PrivatePayCollectStudentsBTN.setObjectName(
+            "PrivatePayCollectStudentsBTN")
+        self.verticalLayout.addWidget(self.PrivatePayCollectStudentsBTN)
+        self.PrivatePaystudentsToDockingBTN = QtWidgets.QPushButton(
+            self.centralwidget)
+        self.PrivatePaystudentsToDockingBTN.setObjectName(
+            "PrivatePaystudentsToDockingBTN")
+        self.verticalLayout.addWidget(self.PrivatePaystudentsToDockingBTN)
+        self.PrivatePaypdfInvoiceCreatorBTN = QtWidgets.QPushButton(
+            self.centralwidget)
+        self.PrivatePaypdfInvoiceCreatorBTN.setObjectName(
+            "PrivatePaypdfInvoiceCreatorBTN")
+        self.verticalLayout.addWidget(self.PrivatePaypdfInvoiceCreatorBTN)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 808, 22))
@@ -84,7 +106,13 @@ class Ui_MainWindow(object):
             self.clickedDockingStudentsElearning)
         self.ElearningpdfInvoiceCreatorBTN.clicked.connect(
             self.clickedPDFCreatorElearning)
-
+        # PrivatePay
+        self.PrivatePayCollectStudentsBTN.clicked.connect(
+            self.clickedCollectStudentsPrivatePay)
+        self.PrivatePaystudentsToDockingBTN.clicked.connect(
+            self.clickedDockingStudentsPrivatePay)
+        self.PrivatePaypdfInvoiceCreatorBTN.clicked.connect(
+            self.clickedPDFCreatorPrivatePay)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -104,6 +132,13 @@ class Ui_MainWindow(object):
             "MainWindow", "Run Students To Docking (E-Learning)"))
         self.ElearningpdfInvoiceCreatorBTN.setText(_translate(
             "MainWindow", "Run PDF Invoice Creator (E-Learning)"))
+        # PrivatePay
+        self.PrivatePayCollectStudentsBTN.setText(_translate(
+            "MainWindow", "Run Students Collection (PrivatePay)"))
+        self.PrivatePaystudentsToDockingBTN.setText(_translate(
+            "MainWindow", "Run Students To Docking (PrivatePay)"))
+        self.PrivatePaypdfInvoiceCreatorBTN.setText(_translate(
+            "MainWindow", "Run PDF Invoice Creator (PrivatePay)"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
         self.actionExit.setText(_translate("MainWindow", "Exit"))
@@ -126,6 +161,16 @@ class Ui_MainWindow(object):
 
     def clickedPDFCreatorElearning(self):
         excel_to_pdf_ELearning()
+
+# Private Pay
+    def clickedCollectStudentsPrivatePay(self):
+        run_program_privatePay()
+
+    def clickedDockingStudentsPrivatePay(self):
+        run_docking_invoices_privatePay()
+
+    def clickedPDFCreatorPrivatePay(self):
+        excel_to_pdf_PrivatePay()
 
 
 if __name__ == "__main__":

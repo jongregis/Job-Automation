@@ -91,5 +91,5 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
     doc.finish()
 
 
-# create_invoice('4/1/2020', 'Cyndi Diggins',
-#                'PRIVATE PAY-PIF(Massage)', 5656.73, '', 'AU M PP', 17)
+# create_invoice('4/24/2020', 'Catherine Kaiser',
+#                'Phlebotomy Tech', 1575, '', 'TAMU', 8677)
