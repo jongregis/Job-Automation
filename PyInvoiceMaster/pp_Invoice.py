@@ -55,5 +55,5 @@ def create_invoice_PrivatePay(start_date, name, description, tuition, percentage
     doc.finish()
 
 
-# create_invoice_PrivatePay('5/12/2020', 'Jennifer Bartlett Phelps',
-#                          'PRIVATE PAY-PIF(Paid in Full)', 1969, '', 'DESU', 21)
+# create_invoice_PrivatePay('5/12/2020', 'Keith Hoke',
+#                           'Project Managment Specialist for CAPM', 1969, '', 'DESU', '21-PP')

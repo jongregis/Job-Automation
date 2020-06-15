@@ -153,12 +153,22 @@ class Item(object):
             return Decimal(str(2799.30))
         elif self.percentage == '30%' and self.unit_price == 3850:
             return Decimal(str(2695))
+        elif self.percentage == '30%' and self.unit_price == 3000:
+            return Decimal(str(2100))
         elif self.unit_price == 6499:
             return Decimal(str(4874.25))
         elif self.unit_price == 7299 and self.percentage == '22.5%':
             return Decimal(str(5656.73))
         elif self.unit_price == 7299 and self.percentage == '25%':
             return Decimal(str(5474.25))
+        elif self.unit_price == 2199 and self.percentage == '22.5%':
+            return Decimal(str(1704.23))
+        elif self.unit_price == 2199 and self.percentage == '25%':
+            return Decimal(str(1649.25))
+        elif self.unit_price == 3000 and self.percentage == '25%':
+            return Decimal(str(2250))
+        elif self.unit_price == 3500 and self.percentage == '25%':
+            return Decimal(str(2625.5))
 
         return Decimal(str(self.unit_price))
 

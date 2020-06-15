@@ -1,12 +1,12 @@
 from datetime import datetime, date
 from .models import InvoiceInfo, ServiceProviderInfo, ClientInfo, Item, Transaction
-from .template import SimpleInvoice
+from .templateCoolCreek import SimpleInvoiceCoolCreek
 from dateutil.relativedelta import *
 
 
 def create_invoice_ELearning(start_date, name, description, tuition, percentage, school, invoice_number):
 
-    doc = SimpleInvoice(
+    doc = SimpleInvoiceCoolCreek(
         '/Users/jongregis/Python/JobAutomation/practice invoices/E-Learning Invoices/E-L {} {} ({}).pdf'.format(invoice_number, name, school))
 
     # Paid stamp, optional
@@ -21,7 +21,7 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
 
     # Service Provider Info, optional
     doc.service_provider_info = ServiceProviderInfo(
-        name='PSF International LLC',
+        name='771 Cool Creek Rd LLC',
         street='1257 Water St',
         city='Wrightsville',
         state='PA',
@@ -37,14 +37,14 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
     # Calculate Tuition
 
     # Add Item
-    doc.add_item(Item(start_date, description, tuition, '35%'))
+    doc.add_item(Item(start_date, description, tuition, ''))
 
     # Tax rate, optional
     # doc.set_item_tax_rate(20)  # 20%
 
     # Optional
     doc.set_bottom_tip(
-        "Email: paul.fears@psfinternational.com<br /><strong>Make All Checks Payable To PSF International, LLC</strong><br/>Thank You For Your Bussiness!")
+        "Email: paul.fears@psfinternational.com<br /><strong>Make All Checks Payable To 771 Cool Creek Rd, LLC</strong><br/>Thank You For Your Bussiness!")
 
     doc.finish()
 

@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
 
 
@@ -120,7 +120,7 @@ cci_programs = dict({
 
 def run_program_privatePay():
     start = findNextCell()
-    school_tab('05', DESU, 'DESU', 10)
+    school_tab('06', DESU, 'DESU', 10)
 
     wb2.save(monthly_spreadsheet)
     end = findNextCell()

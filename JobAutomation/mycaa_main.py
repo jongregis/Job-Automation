@@ -6,10 +6,10 @@ import Levenshtein
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
 # assert os.path.exists(pete_spreadsheet)
 
-lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/April 2020.xlsx"
+lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 # fileName = 'test1.xlsx'
 wb1 = xl.load_workbook(pete_spreadsheet)
 auburn = wb1.worksheets[0]
@@ -66,9 +66,13 @@ def findMissingClass(dictionary, wrong):
         if ratio > num:
             num = ratio
             name = key
-    print(
-        f'Smart lookup finished. \033[1;32m{num}%\033[0;0m that \033[1;33m{wrong}\033[0;0m is \033[1;32m{name}\033[0;0m')
-    return dictionary[name]
+    if num > 0.5:
+        print(
+            f'Smart lookup finished. \033[1;32m{num}%\033[0;0m that \033[1;33m{wrong}\033[0;0m is \033[1;32m{name}\033[0;0m')
+        return dictionary[name]
+    else:
+        print("Smart lookup finished. Nothing really seems to match")
+        return dictionary[name]
 
 
 def auburn_students(current_month):
@@ -80,7 +84,9 @@ def auburn_students(current_month):
     for i in range(6060, mr+1):
 
         c = auburn.cell(row=i, column=3).value
+
         name = auburn.cell(row=i, column=9).value
+
         last_number_row = num - 1
 
         if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
@@ -102,9 +108,14 @@ def auburn_students(current_month):
                 monthly.cell(row=num, column=3).value = date2
 
                 date3 = auburn.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
+                res = isinstance(date3, datetime)
+
+                if res:
+                    date3 = date3.strftime('%m') + '/' + \
+                        date3.strftime('%d') + '/' + date3.strftime('%-y')
+                    jon_sheet.cell(row=num1, column=3).value = date3
+                else:
+                    jon_sheet.cell(row=num1, column=3).value = date3
 
                 address = auburn.cell(row=i, column=7).value
                 monthly.cell(row=num, column=14).value = address
@@ -166,19 +177,19 @@ def auburn_students(current_month):
     wb2.save(monthly_spreadsheet)
 
 
-# -----------------------------------------------------------------------------Clemson-----------------
+# -----------------------------------------------------------------------------Other Schools-----------------
 
 
-def clemson_students(current_month):
-    mr = clemson.max_row
-    mc = clemson.max_column
+def school_tab(current_month, school, schoolString, rowNumber):
+    mr = school.max_row
+    mc = school.max_column
     num = findNextCell()
     num1 = findNextCellJonEmail()
 
-    for i in range(450, mr+1):
+    for i in range(rowNumber, mr+1):
 
-        c = clemson.cell(row=i, column=3).value
-        name = clemson.cell(row=i, column=9).value
+        c = school.cell(row=i, column=3).value
+        name = school.cell(row=i, column=9).value
         last_number_row = num - 1
         if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
@@ -187,25 +198,25 @@ def clemson_students(current_month):
                     row=last_number_row, column=11).value
                 monthly.cell(row=num, column=11).value = last_invoice_number+1
                 # place first date
-                date1 = clemson.cell(row=i, column=1).value
+                date1 = school.cell(row=i, column=1).value
                 date1 = date1.strftime('%m') + '/' + \
                     date1.strftime('%d') + '/' + date1.strftime('%-y')
                 monthly.cell(row=num, column=2).value = date1
 
-                date2 = clemson.cell(row=i, column=3).value
+                date2 = school.cell(row=i, column=3).value
                 date2 = date2.strftime('%m') + '/' + \
                     date2.strftime('%d') + '/' + date2.strftime('%-y')
                 monthly.cell(row=num, column=3).value = date2
 
-                date3 = clemson.cell(row=i, column=4).value
+                date3 = school.cell(row=i, column=4).value
                 date3 = date3.strftime('%m') + '/' + \
                     date3.strftime('%d') + '/' + date3.strftime('%-y')
                 jon_sheet.cell(row=num1, column=3).value = date3
 
-                address = clemson.cell(row=i, column=7).value
+                address = school.cell(row=i, column=7).value
                 monthly.cell(row=num, column=14).value = address
 
-                email = clemson.cell(row=i, column=8).value
+                email = school.cell(row=i, column=8).value
                 jon_sheet.cell(row=num1, column=2).value = email
 
                 if 'LAPTOP' in name:
@@ -213,14 +224,14 @@ def clemson_students(current_month):
                 monthly.cell(row=num, column=4).value = name
                 jon_sheet.cell(row=num1, column=1).value = name
 
-                course = clemson.cell(row=i, column=10).value
+                course = school.cell(row=i, column=10).value
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
 
-                code = clemson.cell(row=i, column=11).value
+                code = school.cell(row=i, column=11).value
                 monthly.cell(row=num, column=9).value = code
 
-                rep = clemson.cell(row=i, column=12).value
+                rep = school.cell(row=i, column=12).value
                 rep = rep.strip().lower()
                 monthly.cell(row=num, column=6).value = rep
 
@@ -235,726 +246,22 @@ def clemson_students(current_month):
                     monthly.cell(
                         row=num, column=7).value = set_commission(course)
 
-                vender = clemson.cell(row=i, column=13).value
+                vender = school.cell(row=i, column=13).value
                 jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'CLEM'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'CLEM')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-
-# -----------------------------------------------------------------------------CSU-----------------
-
-
-def csu_students(current_month):
-    mr = csu.max_row
-    mc = csu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(96, mr+1):
-
-        c = csu.cell(row=i, column=3).value
-        name = csu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = csu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = csu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = csu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = csu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = csu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = csu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = csu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = csu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
+                monthly.cell(row=num, column=9).value = schoolString
+                if schoolString == 'CSU':
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = set_pricing_csu(course)
+                elif schoolString == 'UWLAX':
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = set_pricing_uwlax(course)
                 else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = csu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'CSU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'CSU')).value = set_pricing_csu(course)
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = set_pricing_cci(course)
 
                 num += 1
                 num1 += 1
 
-    wb2.save(monthly_spreadsheet)
-
-# -----------------------------------------------------------------------------LSU-----------------
-
-
-def lsu_students(current_month):
-    mr = lsu.max_row
-    mc = lsu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(74, mr+1):
-
-        c = lsu.cell(row=i, column=3).value
-        name = lsu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = lsu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = lsu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = lsu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = lsu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = lsu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = lsu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = lsu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = lsu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = lsu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'LSU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'LSU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-# -----------------------------------------------------------------------------MSU-----------------
-
-
-def msu_students(current_month):
-    mr = msu.max_row
-    mc = msu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(450, mr+1):
-
-        c = msu.cell(row=i, column=3).value
-        name = msu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = msu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = msu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = msu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = msu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = msu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = msu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = msu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = msu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = msu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'MSU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'MSU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-
-# -----------------------------------------------------------------------------UNH-----------------
-
-
-def unh_students(current_month):
-    mr = unh.max_row
-    mc = unh.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(26, mr+1):
-
-        c = unh.cell(row=i, column=3).value
-        name = unh.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = unh.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = unh.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = unh.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = unh.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = unh.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = unh.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = unh.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = unh.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = unh.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'UNH'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'UNH')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-# -----------------------------------------------------------------------------TAMUT-----------------
-
-
-def tamu_students(current_month):
-    mr = tamu.max_row
-    mc = tamu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(50, mr+1):
-
-        c = tamu.cell(row=i, column=3).value
-        name = tamu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = tamu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = tamu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = tamu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = tamu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = tamu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = tamu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = tamu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = tamu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = tamu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'TAMU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'TAMU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-# -----------------------------------------------------------------------------WKU-----------------
-
-
-def wku_students(current_month):
-    mr = wku.max_row
-    mc = wku.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(257, mr+1):
-
-        c = wku.cell(row=i, column=3).value
-        name = wku.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = wku.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = wku.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = wku.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = wku.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = wku.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = wku.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = wku.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = wku.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = wku.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'WKU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'WKU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-
-    wb2.save(monthly_spreadsheet)
-# -----------------------------------------------------------------------------UWLAX-----------------
-
-
-def uwlax_students(current_month):
-    mr = uwlax.max_row
-    mc = uwlax.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(246, mr+1):
-
-        c = uwlax.cell(row=i, column=3).value
-        name = uwlax.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = uwlax.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = uwlax.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = uwlax.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = uwlax.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = uwlax.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = uwlax.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = uwlax.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = uwlax.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = uwlax.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'UWLAX'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'UWLAX')).value = set_pricing_uwlax(course)
-
-                num += 1
-                num1 += 1
-    wb2.save(monthly_spreadsheet)
-# -----------------------------------------------------------------------------DESU-----------------
-
-
-def desu_students(current_month):
-    mr = desu.max_row
-    mc = desu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(11, mr+1):
-
-        c = desu.cell(row=i, column=3).value
-        name = desu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = desu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = desu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = desu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = desu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = desu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = desu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = desu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = desu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = desu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'DESU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'DESU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
-    wb2.save(monthly_spreadsheet)
-# ----------------------------------------------TAMIU-------------------------------------------------
-
-
-def tamiu_students(current_month):
-    mr = tamiu.max_row
-    mc = tamiu.max_column
-    num = findNextCell()
-    num1 = findNextCellJonEmail()
-
-    for i in range(9, mr+1):
-
-        c = tamiu.cell(row=i, column=3).value
-        name = tamiu.cell(row=i, column=9).value
-        last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
-            if findName(name) != True:
-                # place invoice number
-                last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
-                # place first date
-                date1 = tamiu.cell(row=i, column=1).value
-                date1 = date1.strftime('%m') + '/' + \
-                    date1.strftime('%d') + '/' + date1.strftime('%-y')
-                monthly.cell(row=num, column=2).value = date1
-
-                date2 = tamiu.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
-
-                date3 = tamiu.cell(row=i, column=4).value
-                date3 = date3.strftime('%m') + '/' + \
-                    date3.strftime('%d') + '/' + date3.strftime('%-y')
-                jon_sheet.cell(row=num1, column=3).value = date3
-
-                address = tamiu.cell(row=i, column=7).value
-                monthly.cell(row=num, column=14).value = address
-
-                email = tamiu.cell(row=i, column=8).value
-                jon_sheet.cell(row=num1, column=2).value = email
-
-                if 'LAPTOP' in name:
-                    monthly.cell(row=num, column=8).value = 'x'
-                monthly.cell(row=num, column=4).value = name
-                jon_sheet.cell(row=num1, column=1).value = name
-
-                course = tamiu.cell(row=i, column=10).value
-                course = course.strip().lower()
-                monthly.cell(row=num, column=5).value = course
-
-                code = tamiu.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
-                rep = tamiu.cell(row=i, column=12).value
-                rep = rep.strip().lower()
-                monthly.cell(row=num, column=6).value = rep
-
-                # setting commision for pete
-                if rep == "maie":
-                    monthly.cell(row=num, column=7).value = None
-                elif rep == "pete code lead" and pete_commission() > 5:
-                    monthly.cell(row=num, column=7).value = 75
-                elif rep == "pete code lead" and pete_commission() <= 5:
-                    monthly.cell(row=num, column=7).value = 'x'
-                else:
-                    monthly.cell(
-                        row=num, column=7).value = set_commission(course)
-
-                vender = tamiu.cell(row=i, column=13).value
-                jon_sheet.cell(row=num1, column=4).value = vender
-                monthly.cell(row=num, column=9).value = 'TAMIU'
-                monthly.cell(row=num, column=set_pricing_column(
-                    'TAMIU')).value = set_pricing_cci(course)
-
-                num += 1
-                num1 += 1
     wb2.save(monthly_spreadsheet)
 
 
@@ -973,6 +280,7 @@ cci_programs = dict({
     "ekg technician cert program": 1250,
     "finanance professional": 1967,
     "finance professional": 1967,
+    "front end web developer": 1850,
     "human resources professional": 2029,
     "it cyber security professional with comp tia security +": 2050,
     "medical administration assistance": 1250,
@@ -1025,7 +333,9 @@ met_programs = dict({
     "drug and alcohol counselor": 2962.50,
     "event planning entrepreneur": 2962.50,
     "full stack web developer with mean stack": 2999.25,
+    "front end web developer": 2999.25,
     "health & fitness industry professional": 2962.50,
+    "homeland security specialist": 2849.25,
     "human resources professional": 2999.25,
     "interior decorating and design entrepreneur": 2962.50,
     "it cyber security professional with comp tia security+": 2999.25,
@@ -1048,14 +358,18 @@ met_programs = dict({
     "physical therapy aide": 2962.50,
     "professional cooking and catering": 2962.50,
     "real estate law professional": 2849.25,
+    "stress management coach": 2962.50,
     "teachers aide": 2999.25,
+    "technical writing": 1649.25,
     "travel agent specialist": 2962.50,
+    'veterinary office assistant specialist': 2962.50,
     "wedding consultant entrepreneur": 2962.50})
 
 uwlax_programs = dict({
     "clinical medical assistant": 2765,
     "dental assisting": 2765,
     "dental assisting certification": 2765,
+    "medical administrative assistant": 2100,
     "medical billing and coding with medical admin": 2765,
     "pharmacy technician with medical administration": 2765,
     "physicians office assistant with ehrm": 2765,
@@ -1065,7 +379,8 @@ uwlax_programs = dict({
 csu_programs = dict({
     "clinical medical assistant": 2962.50,
     "medical billing and coding": 2437.50,
-    "medical billing and coding with medical administration": 2962.50})
+    "medical billing and coding with medical administration": 2962.50,
+    "paralegal": 2999.25})
 
 commission = dict({
     "accounting professional": 500,
@@ -1178,6 +493,8 @@ def set_pricing_column(school):
         return 31
     elif school == "DESU":
         return 32
+    elif school == "TAMIU":
+        return 33
     else:
         print("\033[1;31mno school with that name \033[0;0m")
 
@@ -1199,16 +516,17 @@ def set_commission(course):
 
 def runProgram():
     start = findNextCell()
-    auburn_students('05')
-    clemson_students('05')
-    csu_students('05')
-    lsu_students('05')
-    msu_students('05')
-    unh_students('05')
-    tamu_students('05')
-    wku_students('05')
-    uwlax_students('05')
-    desu_students('05')
+    auburn_students('06')
+    school_tab('06', clemson, 'CLEM', 450)
+    school_tab('06', csu, 'CSU', 96)
+    school_tab('06', lsu, 'LSU', 74)
+    school_tab('06', msu, 'MSU', 450)
+    school_tab('06', unh, 'UNH', 26)
+    school_tab('06', tamu, 'TAMU', 50)
+    school_tab('06', wku, 'WKU', 257)
+    school_tab('06', uwlax, 'UWLAX', 246)
+    school_tab('06', desu, 'DESU', 11)
+    school_tab('06', tamiu, 'TAMIU', 9)
     wb2.save(monthly_spreadsheet)
     wb3.save(jon_email_workbook)
     end = findNextCell()

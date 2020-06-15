@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/ECA ALL SCHOOLS MONTHLY SS.xlsx"
 
 
@@ -9,7 +9,7 @@ wb1 = xl.load_workbook(pete_spreadsheet)
 wb2 = xl.load_workbook(monthly_spreadsheet)
 
 broward = wb1.worksheets[1]
-flagler = wb1.worksheets[3]
+flagler = wb1.worksheets[5]
 
 monthly = wb2.worksheets[2]
 
@@ -40,9 +40,8 @@ def school_tab(current_month, school, schoolString, rowNumber):
         c = school.cell(row=i, column=3).value
         name = school.cell(row=i, column=1).value
         last_number_row = num - 1
-        if c == None:
-            pass
-        elif c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+
+        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -71,6 +70,9 @@ def school_tab(current_month, school, schoolString, rowNumber):
     wb2.save(monthly_spreadsheet)
 
 
+# print(flagler.cell(row=10, column=3).value)
+
+
 def set_pricing_column(school):
 
     if school == "BROWARD":
@@ -83,8 +85,8 @@ def set_pricing_column(school):
 
 def run_program_elearning():
     start = findNextCell()
-    school_tab('05', broward, 'BROWARD', 9)
-    school_tab('05', flagler, 'FLAGLER', 9)
+    school_tab('06', broward, 'BROWARD', 36)
+    school_tab('06', flagler, 'FLAGLER', 9)
     wb2.save(monthly_spreadsheet)
     end = findNextCell()
     total = end-start

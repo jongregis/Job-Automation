@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/PP Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
@@ -11,7 +11,6 @@ monthly = wb1.worksheets[1]
 wb2 = xl.load_workbook(filename=mycaa_invoice, read_only=False, keep_vba=True)
 setup_sheet = wb2.worksheets[3]
 data_sheet = wb2.worksheets[1]
-
 
 
 def findNextCell():
