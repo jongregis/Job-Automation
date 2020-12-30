@@ -4,13 +4,13 @@ from .template import SimpleInvoice
 from dateutil.relativedelta import *
 
 
-def create_invoice_PrivatePay(start_date, name, description, tuition, percentage, school, invoice_number):
+def create_invoice_PrivatePay(start_date, name, description, tuition, percentage, school, invoice_number, prog_type):
 
     doc = SimpleInvoice(
-        '/Users/jongregis/Python/JobAutomation/practice invoices/PP Invoices/PP {} {} ({}).pdf'.format(invoice_number, name, school))
+        f'/Users/jongregis/Python/JobAutomation/practice invoices/PP Invoices/{prog_type} {invoice_number} {name} ({school}).pdf')
 
     # Paid stamp, optional
-    doc.is_paid = True
+    doc.is_paid = 'ECA'
 
     current_date = datetime.now().strftime('%m'+'/'+'%d'+'/'+'%-y')
     due_date = datetime.now() + relativedelta(months=+1)
@@ -41,6 +41,24 @@ def create_invoice_PrivatePay(start_date, name, description, tuition, percentage
     elif tuition == 5656.73:
         tuition = 7299
         percentage = '22.5%'
+    elif tuition == 2962.50:
+        tuition = 3950
+        percentage = '25%'
+    elif tuition == 4874.25:
+        tuition = 6499
+        percentage = '25%'
+    elif tuition == 3187.50:
+        tuition = 4250
+        percentage = '25%'
+    elif tuition == 2250:
+        tuition = 3000
+        percentage = '25%'
+    elif tuition == 2625.50:
+        tuition = 3500
+        percentage = '25%'
+    elif tuition == 2849.25:
+        tuition = 3799
+        percentage = '25%'
 
     # Add Item
     doc.add_item(Item(start_date, description, tuition, percentage))
@@ -50,10 +68,10 @@ def create_invoice_PrivatePay(start_date, name, description, tuition, percentage
 
     # Optional
     doc.set_bottom_tip(
-        "Email: paul.fears@psfinternational.com<br /><strong>Make All Checks Payable To PSF International, LLC</strong><br/>Thank You For Your Bussiness!")
+        "Email: paul.fears@psfinternational.com<br /><strong>Make All Checks Payable To PSF International, LLC</strong><br/>Thank You For Your Business!")
 
     doc.finish()
 
 
-# create_invoice_PrivatePay('5/12/2020', 'Keith Hoke',
-#                           'Project Managment Specialist for CAPM', 1969, '', 'DESU', '21-PP')
+# create_invoice_PrivatePay('3/18/2020', 'Hope Dike',
+#                           'Project management Professional', 1922, '', 'DESU', '196', 'PP')

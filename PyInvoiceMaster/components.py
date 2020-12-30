@@ -81,3 +81,25 @@ class PaidStampCoolCreek(object):
         canvas.drawInlineImage("/Users/jongregis/Python/JobAutomation/PyInvoiceMaster/771 Cool Creek Rd LLC Logo.png",
                                self.x-5.75 * inch, self.y + 3 * inch, width=2*inch, height=2*inch)
         canvas.restoreState()
+
+
+class PaidStampPSF(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __call__(self, canvas, doc):
+        # "PAID"
+        canvas.saveState()
+        # canvas.setFontSize(50)
+        # canvas.setFillColor(colors.red)
+        # canvas.setStrokeColor(colors.red)
+        # canvas.rotate(45)
+        # canvas.drawString(self.x, self.y, 'PAID')
+        # canvas.setLineWidth(4)
+        # canvas.setLineJoin(1)  # Round join
+        # canvas.rect(self.x - .25 * inch, self.y - .25 *
+        #             inch, width=2*inch, height=inch)
+        canvas.drawInlineImage("/Users/jongregis/Python/JobAutomation/PyInvoiceMaster/PSF LOGO 2019.png",
+                               self.x-5.75 * inch, self.y + 3 * inch, width=2*inch, height=2*inch)
+        canvas.restoreState()

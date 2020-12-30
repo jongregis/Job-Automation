@@ -199,8 +199,8 @@ class Item(object):
         # ECDC
         elif self.unit_price == 1000 and self.percentage == '30%':
             return Decimal(str(700))
-        elif self.unit_price == 1750 and self.percentage == '30%':
-            return Decimal(str(1225))
+        elif self.unit_price == 70:
+            return Decimal(str(1500))
 
         return Decimal(str(self.unit_price))
 

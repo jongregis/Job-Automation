@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
     def clickedCollectStudentsMYCAA(self):
-        runProgram()
+        runProgram('12', 'Dec')
 
     def clickedDockingStudentsMYCAA(self):
         run_docking_invoices()
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
 # Elearning
 
     def clickedCollectStudentsElearning(self):
-        run_program_elearning()
+        run_program_elearning('12')
 
     def clickedDockingStudentsElearning(self):
         run_docking_invoices_elearning()
@@ -164,7 +164,7 @@ class Ui_MainWindow(object):
 
 # Private Pay
     def clickedCollectStudentsPrivatePay(self):
-        run_program_privatePay()
+        run_program_privatePay('12')
 
     def clickedDockingStudentsPrivatePay(self):
         run_docking_invoices_privatePay()
@@ -181,3 +181,6 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+    # runProgram('11')
+    # run_program_elearning('11')
+    # run_program_privatePay('11')

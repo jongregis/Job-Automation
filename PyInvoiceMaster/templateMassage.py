@@ -8,11 +8,11 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, Spacer
-from .models import PDFInfo, Item, Transaction, InvoiceInfo, ServiceProviderInfo, ClientInfo
-from .components import SimpleTable, TableWithHeader, PaidStamp, PaidStampPSF
+from models import PDFInfo, Item, Transaction, InvoiceInfo, ServiceProviderInfo, ClientInfo
+from components import SimpleTable, TableWithHeader, PaidStamp, PaidStampCoolCreek
 
 
-class SimpleInvoice(SimpleDocTemplate):
+class SimpleInvoiceMassage(SimpleDocTemplate):
     default_pdf_info = PDFInfo(
         title='Invoice', author='PSF International LLC', subject='Invoice')
     precision = None
@@ -47,7 +47,7 @@ class SimpleInvoice(SimpleDocTemplate):
         self.invoice_info = None
         self.service_provider_info = None
         self.client_info = None
-        self.is_paid = 'ECA'
+        self.is_paid = False
         self._items = []
         self._item_tax_rate = None
         self._transactions = []
@@ -223,8 +223,8 @@ class SimpleInvoice(SimpleDocTemplate):
             Paragraph('Details', self._defined_styles.get('Heading1'))
         )
 
-        item_data_title = ('Start Date', 'Description', 'Tuition',
-                           'Percentage', 'Amount')
+        item_data_title = ('Start Date', 'Name', 'Payment',
+                           'Payment #', 'Amount')
         item_data.insert(0, item_data_title)  # Insert title
 
         # Summary field
@@ -337,9 +337,7 @@ class SimpleInvoice(SimpleDocTemplate):
         self._build_bottom_tip()
 
         kwargs = {}
-        if self.is_paid == 'ECA':
-            kwargs['onFirstPage'] = PaidStamp(7 * inch, 5.8 * inch)
-        elif self.is_paid == 'PSF':
-            kwargs['onFirstPage'] = PaidStampPSF(7 * inch, 5.8 * inch)
+        if self.is_paid:
+            kwargs['onFirstPage'] = PaidStampCoolCreek(7 * inch, 5.8 * inch)
 
         self.build(self._story, **kwargs)

@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/PP Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
@@ -63,6 +63,8 @@ def move_to_setup_sheet():
         invoice_number = monthly.cell(row=i, column=11).value
         desu_price = monthly.cell(row=i, column=14).value
         au_massage = monthly.cell(row=i, column=15).value
+        au_ca = monthly.cell(row=i, column=12).value
+        lsus_ca = monthly.cell(row=i, column=19).value
 
         if findName(name) != True:
 
@@ -77,6 +79,10 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = desu_price
             elif school == 'AU M':
                 setup_sheet.cell(row=num, column=6).value = au_massage
+            elif school == 'CA AU':
+                setup_sheet.cell(row=num, column=6).value = au_ca
+            elif school == 'CA LSUS':
+                setup_sheet.cell(row=num, column=6).value = lsus_ca
 
             else:
                 print("School doesnt exist")

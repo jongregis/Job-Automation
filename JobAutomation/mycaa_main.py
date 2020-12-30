@@ -1,30 +1,39 @@
 import openpyxl as xl
 from datetime import datetime
+import dropbox
 import os
 from difflib import SequenceMatcher
 import Levenshtein
+from JobAutomation.SortingInvoices.doubleStudent import findDoubleStudent
+from JobAutomation.data import cci_programs, commission, au_programs, met_programs, uwlax_programs, csu_programs, tamut_ed4_programs
+from database.database import execute_query, connection
+
+dbx = dropbox.Dropbox(
+    'sl.AivXQjpwtsO_DWuuKqUU0r99wY59YvNacYsA3wbjSF4nrP86A_VXya0M3Fh8IOK8-5iCZXKL4Jv-Kzjw6Q9xXaT7g5h5RZWf9Gyh613v4JK_amf1SpIXNyZeDukP3h-asd_ALiAAhrM')
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
+
 # assert os.path.exists(pete_spreadsheet)
 
-lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
 # fileName = 'test1.xlsx'
 wb1 = xl.load_workbook(pete_spreadsheet)
-auburn = wb1.worksheets[0]
-clemson = wb1.worksheets[1]
-csu = wb1.worksheets[2]
-lsu = wb1.worksheets[3]
-msu = wb1.worksheets[4]
-unh = wb1.worksheets[5]
-tamu = wb1.worksheets[7]
-wku = wb1.worksheets[8]
-uwlax = wb1.worksheets[9]
-desu = wb1.worksheets[10]
-tamiu = wb1.worksheets[12]
+auburn = wb1["AUBURN & TJC"]
+clemson = wb1["CLEMSON"]
+csu = wb1["COLUMBIA SOUTHERN"]
+lsu = wb1["LOUISIANA STATE"]
+msu = wb1["MONTANA STATE"]
+unh = wb1["NEW HAMPSHIRE"]
+tamu = wb1["TAMUT"]
+wku = wb1["WESTERN KENTUCKY"]
+utep = wb1["UTEP"]
+uwlax = wb1["WISONSIN "]
+desu = wb1["DESU-MyCAA"]
+tamiu = wb1["Texas A&M Interntional"]
+wtamu = wb1["WEST TX A & M"]
+fpu = wb1["FRESNO PACIFIC"]
 
-fileName1 = 'test2.xlsx'
 wb2 = xl.load_workbook(monthly_spreadsheet)
 monthly = wb2.worksheets[0]
 
@@ -57,6 +66,17 @@ def findName(name):
             return True
 
 
+def nameCleaner(x):
+    if '-LAPTOP' in x:
+        name, laptop = x.split('-LAPTOP')
+        return name
+    elif 'LAPTOP' in x:
+        name, laptop = x.split('LAPTOP')
+        return name
+    else:
+        return x
+
+
 def findMissingClass(dictionary, wrong):
     num = 0
     name = ''
@@ -68,7 +88,7 @@ def findMissingClass(dictionary, wrong):
             name = key
     if num > 0.5:
         print(
-            f'Smart lookup finished. \033[1;32m{num}%\033[0;0m that \033[1;33m{wrong}\033[0;0m is \033[1;32m{name}\033[0;0m')
+            f"Smart lookup finished. \033[1;32m{num}%\033[0;0m that \033[1;33m{wrong}\033[0;0m is \033[1;32m{name}\033[0;0m")
         return dictionary[name]
     else:
         print("Smart lookup finished. Nothing really seems to match")
@@ -155,21 +175,39 @@ def auburn_students(current_month):
                 if vender == 'CCI':
                     if course in au_programs:
                         monthly.cell(row=num, column=9).value = 'AU'
+                        school = 'AU'
                         monthly.cell(
                             row=num, column=set_pricing_column(
                                 'AU')).value = set_pricing_au(course)
+                        price = set_pricing_au(course)
                     elif course not in au_programs:
                         monthly.cell(row=num, column=9).value = 'MET'
+                        school = 'MET'
                         monthly.cell(row=num, column=set_pricing_column(
                             'MET')).value = set_pricing_met(course)
+                        price = set_pricing_met(course)
                 elif vender == 'Pete Medd':
                     monthly.cell(row=num, column=9).value = 'AU M'
+                    school = 'AU M'
                     monthly.cell(row=num, column=set_pricing_column(
                         'MET')).value = set_pricing_met(course)
+                    price = set_pricing_met(course)
                 else:
                     monthly.cell(row=num, column=9).value = 'AU ED4'
+                    school = 'AU ED4'
                     monthly.cell(row=num, column=set_pricing_column(
                         'AU ED4')).value = set_pricing_met(course)
+                    price = set_pricing_met(course)
+                name = nameCleaner(name)
+                first, last = name.split(' ', 1)
+                query = f"""
+                INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
+                VALUES ('{first}', '{last}', '{school}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date2}', '{price}');
+                """
+                try:
+                    execute_query(connection, query)
+                except Exception as e:
+                    print(e)
 
                 num += 1
                 num1 += 1
@@ -189,7 +227,11 @@ def school_tab(current_month, school, schoolString, rowNumber):
     for i in range(rowNumber, mr+1):
 
         c = school.cell(row=i, column=3).value
-        name = school.cell(row=i, column=9).value
+        if schoolString == 'TAMIU':
+            name = school.cell(row=i, column=8).value
+        else:
+            name = school.cell(row=i, column=9).value
+
         last_number_row = num - 1
         if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
@@ -213,10 +255,18 @@ def school_tab(current_month, school, schoolString, rowNumber):
                     date3.strftime('%d') + '/' + date3.strftime('%-y')
                 jon_sheet.cell(row=num1, column=3).value = date3
 
-                address = school.cell(row=i, column=7).value
+                if schoolString == 'UTEP' or schoolString == 'WTAMU':
+                    address = school.cell(row=i, column=8).value
+                elif schoolString == 'TAMIU':
+                    address = school.cell(row=i, column=9).value
+                else:
+                    address = school.cell(row=i, column=7).value
                 monthly.cell(row=num, column=14).value = address
 
-                email = school.cell(row=i, column=8).value
+                if schoolString == 'UTEP' or schoolString == 'TAMIU' or schoolString == 'WTAMU':
+                    email = school.cell(row=i, column=7).value
+                else:
+                    email = school.cell(row=i, column=8).value
                 jon_sheet.cell(row=num1, column=2).value = email
 
                 if 'LAPTOP' in name:
@@ -231,7 +281,11 @@ def school_tab(current_month, school, schoolString, rowNumber):
                 code = school.cell(row=i, column=11).value
                 monthly.cell(row=num, column=9).value = code
 
-                rep = school.cell(row=i, column=12).value
+                # checks the rep column for school
+                if schoolString == 'UNH':
+                    rep = school.cell(row=i, column=13).value
+                else:
+                    rep = school.cell(row=i, column=12).value
                 rep = rep.strip().lower()
                 monthly.cell(row=num, column=6).value = rep
 
@@ -249,175 +303,50 @@ def school_tab(current_month, school, schoolString, rowNumber):
                 vender = school.cell(row=i, column=13).value
                 jon_sheet.cell(row=num1, column=4).value = vender
                 monthly.cell(row=num, column=9).value = schoolString
-                if schoolString == 'CSU':
+
+                if vender == 'ED4O' and schoolString == 'TAMU' or vender == 'ED40' and schoolString == 'TAMU':
+                    monthly.cell(row=num, column=9).value = 'TAMU ED4'
+                    monthly.cell(row=num, column=set_pricing_column(
+                        'TAMU')).value = set_pricing_tamut_ed4(course)
+                    price = set_pricing_tamut_ed4(course)
+                elif vender == 'ED4O' and schoolString == 'DESU':
+                    monthly.cell(row=num, column=9).value = 'DESU ED4'
+                    monthly.cell(row=num, column=set_pricing_column(
+                        'DESU')).value = set_pricing_met(course)
+                    price = set_pricing_met(course)
+                elif schoolString == 'CSU':
                     monthly.cell(row=num, column=set_pricing_column(
                         schoolString)).value = set_pricing_csu(course)
+                    price = set_pricing_csu(course)
                 elif schoolString == 'UWLAX':
                     monthly.cell(row=num, column=set_pricing_column(
                         schoolString)).value = set_pricing_uwlax(course)
+                    price = set_pricing_uwlax(course)
+                elif vender == 'Pete Medd' or vender == 'PETE MEDD':
+                    monthly.cell(row=num, column=9).value = 'TAMU M'
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = set_pricing_cci(course)
+                    price = set_pricing_cci(course)
                 else:
                     monthly.cell(row=num, column=set_pricing_column(
                         schoolString)).value = set_pricing_cci(course)
+                    price = set_pricing_cci(course)
+                name = nameCleaner(name)
+                first, last = name.split(' ', 1)
+                query = f"""
+                INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
+                VALUES ('{first}', '{last}', '{schoolString}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date2}', '{price}');
+                """
+                try:
+                    execute_query(connection, query)
+                except Exception as e:
+                    print(e)
 
                 num += 1
                 num1 += 1
 
     wb2.save(monthly_spreadsheet)
-
-
-# Dictionaries
-cci_programs = dict({
-    "accounting professional": 2016,
-    "administrative assistant with quickbooks": 1748,
-    "bookkeeping with quickbooks": 1733,
-    "business management professional": 1948,
-    "childcare specialist": 1942,
-    "clinical medical assistant": 1405,
-    "clinical medical assistant with ob/gyn": 1405,
-    "clinical medical assistant with pediatric specialist": 1405,
-    "criminal investigation professional": 2051,
-    "dental assisting": 1825,
-    "ekg technician cert program": 1250,
-    "finanance professional": 1967,
-    "finance professional": 1967,
-    "front end web developer": 1850,
-    "human resources professional": 2029,
-    "it cyber security professional with comp tia security +": 2050,
-    "medical administration assistance": 1250,
-    "medical administrative assistant": 1250,
-    "medical administrative assistant online": 1250,
-    "medical administrative assistant online": 1250,
-    "medical billing and coding": 1215,
-    "medical billing and coding with medical administrative assistant": 1370,
-    "medical billing and coding with medical admin": 1370,
-    "medical billing and coding with medical administration": 1370,
-    "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
-    "organizational behavior professional": 2090,
-    "paralegal": 1699,
-    "paralegal certificate program": 1699,
-    "pharmacy technician": 1200,
-    "pharmacy technician with medical administration": 1400,
-    "pharmacy tech with med admin": 1400,
-    "phlebotomy technician": 1575,
-    "phlebotomy tech -spanish": 1575,
-    "photography entrepreneur with adobe certificate": 1850,
-    "photography entrepreneur with adobe": 1850,
-    "teachers aide": 2029,
-    "veterinary assistant specialist": 1013, })
-
-au_programs = dict({
-    "clinical medical assistant": 1405,
-    "clinical medical assistant with ob/gyn": 1405,
-    "clinical medical assistant with pediatric specialist": 1405,
-    "dental assisting": 1825,
-    "ekg technician cert program": 1250,
-    "medical billing and coding": 1215,
-    "medical billing and coding with medical administrative assistant": 1370,
-    "medical billing and coding with medical admin": 1370,
-    "medical billing and coding with medical administration": 1370,
-    "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
-    "pharmacy technician": 1200,
-    "pharmacy technician with medical administration": 1400,
-    "pharmacy technician with medical admin online inc. national cert. and clinical ext.": 1400,
-    "phlebotomy technician": 1575,
-    "veterinary assistant specialist": 1013, })
-
-met_programs = dict({
-    "accounting professional": 2999.25,
-    "administrative assistant with quickbooks": 2999.25,
-    "administrative assistant with bookkeeping and quickbooks": 2999.25,
-    "bookeeping with quickbooks": 2849.25,
-    "business management professional": 2999.25,
-    "childcare specialist": 2999.25,
-    "child day care management cert program": 2962.50,
-    "drug and alcohol counselor": 2962.50,
-    "event planning entrepreneur": 2962.50,
-    "full stack web developer with mean stack": 2999.25,
-    "front end web developer": 2999.25,
-    "health & fitness industry professional": 2962.50,
-    "homeland security specialist": 2849.25,
-    "human resources professional": 2999.25,
-    "interior decorating and design entrepreneur": 2962.50,
-    "it cyber security professional with comp tia security+": 2999.25,
-    "it network professional with comptia network+": 2999.25,
-    "life skills coach": 2962.50,
-    "massage practitioner program (500 hr)": 3000,
-    "massage practitioner program (620 hr)": 3000,
-    "massage practitioner program (650 hr)": 3000,
-    "massage practitioner program (700 hr)": 3000,
-    "massage practitioner program (750 hr)": 3000,
-    "marketing professional": 2849.25,
-    "mental health technician specialist cert": 2962.50,
-    "nutrition and fitness professional": 2962.50,
-    "ophthalmic assistant specialist": 2962.50,
-    "paralegal certificate program": 2999.25,
-    "patient advocate specialist": 2962.50,
-    "personal fitness trainer specialist": 2999.25,
-    "photography entrepreneur with adobe certificate": 2962.50,
-    "photography entrepreneur with adobe": 2962.50,
-    "physical therapy aide": 2962.50,
-    "professional cooking and catering": 2962.50,
-    "real estate law professional": 2849.25,
-    "stress management coach": 2962.50,
-    "teachers aide": 2999.25,
-    "technical writing": 1649.25,
-    "travel agent specialist": 2962.50,
-    'veterinary office assistant specialist': 2962.50,
-    "wedding consultant entrepreneur": 2962.50})
-
-uwlax_programs = dict({
-    "clinical medical assistant": 2765,
-    "dental assisting": 2765,
-    "dental assisting certification": 2765,
-    "medical administrative assistant": 2100,
-    "medical billing and coding with medical admin": 2765,
-    "pharmacy technician with medical administration": 2765,
-    "physicians office assistant with ehrm": 2765,
-    "teachers aide": 2799.30,
-    "veterinary assistant": 2695})
-
-csu_programs = dict({
-    "clinical medical assistant": 2962.50,
-    "medical billing and coding": 2437.50,
-    "medical billing and coding with medical administration": 2962.50,
-    "paralegal": 2999.25})
-
-commission = dict({
-    "accounting professional": 500,
-    "administrative assistant with quickbooks": 500,
-    "bookkeeping with quickbooks": 400,
-    "child day care management cert program": 400,
-    "childcare specialist": 500,
-    "clinical medical assistant": 300,
-    "clinical medical assistant with ob/gyn": 300,
-    "clinical medical assistant with pediatric specialist": 300,
-    "criminal investigation professional": 500,
-    "dental assisting certification": 400,
-    "dental assisting": 400,
-    "life skills coach": 300,
-    "ekg technician cert program": 300,
-    "event planning entrepreneur": 300,
-    "finanance professional": 500,
-    "full stack web developer with mean stack": None,
-    "human resources professional": 500,
-    "it cyber security professional with comp tia security +": 500,
-    "medical administration assistance": None,
-    "medical billing and coding": 300,
-    "medical billing and coding with medical administration": 300,
-    "medical billing and coding with medical admin": 300,
-    "medical billing and coding with medical administration": 300,
-    "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 300,
-    "mental health technician specialist cert": 400,
-    "paralegal": 500,
-    "pharmacy technician": 300,
-    "pharmacy technician with medical administration": 300,
-    "phlebotomy technician": 500,
-    "photography entrepreneur with adobe certificate": 300,
-    "photography entrepreneur with adobe": 300,
-    "patient advocate specialist": 400,
-    "teachers aide": 500,
-    "veterinary assistant specialist": 300
-})
+    print(schoolString)
 
 
 def set_pricing_cci(course):
@@ -467,6 +396,15 @@ def set_pricing_csu(course):
         return findMissingClass(csu_programs, course)
 
 
+def set_pricing_tamut_ed4(course):
+    if course in tamut_ed4_programs:
+        return tamut_ed4_programs[course]
+    else:
+        print(
+            "\033[1;31mNo class, update pricing for TAMUT ED4, smart update started... \033[0;0m")
+        return findMissingClass(tamut_ed4_programs, course)
+
+
 def set_pricing_column(school):
 
     if school == "AU ED4":
@@ -479,6 +417,8 @@ def set_pricing_column(school):
         return 17
     elif school == "LSU":
         return 19
+    elif school == "UTEP":
+        return 20
     elif school == "CLEM":
         return 21
     elif school == "UWLAX":
@@ -495,6 +435,10 @@ def set_pricing_column(school):
         return 32
     elif school == "TAMIU":
         return 33
+    elif school == "WTAMU":
+        return 30
+    elif school == "FPU":
+        return 24
     else:
         print("\033[1;31mno school with that name \033[0;0m")
 
@@ -502,7 +446,7 @@ def set_pricing_column(school):
 def pete_commission():
     num = 0
     for cell in monthly["F"]:
-        if cell.value == "pete code lead" or 'pete':
+        if cell.value == "pete code lead" or cell.value == 'pete':
             num += 1
     return num
 
@@ -514,26 +458,40 @@ def set_commission(course):
         print('')
 
 
-def runProgram():
-    start = findNextCell()
-    auburn_students('06')
-    school_tab('06', clemson, 'CLEM', 450)
-    school_tab('06', csu, 'CSU', 96)
-    school_tab('06', lsu, 'LSU', 74)
-    school_tab('06', msu, 'MSU', 450)
-    school_tab('06', unh, 'UNH', 26)
-    school_tab('06', tamu, 'TAMU', 50)
-    school_tab('06', wku, 'WKU', 257)
-    school_tab('06', uwlax, 'UWLAX', 246)
-    school_tab('06', desu, 'DESU', 11)
-    school_tab('06', tamiu, 'TAMIU', 9)
-    wb2.save(monthly_spreadsheet)
-    wb3.save(jon_email_workbook)
-    end = findNextCell()
-    total = end-start
-    print("\033[1;32mAll Done Transferring Students!\033[0;0m")
-    print("\033[1;32m{} \033[0;0mwere transferred".format(total))
+def runProgram(date, month):
+    try:
+        print('starting')
+        start = findNextCell()
+        auburn_students(date)
+        school_tab(date, clemson, 'CLEM', 450)
+        school_tab(date, csu, 'CSU', 96)
+        school_tab(date, lsu, 'LSU', 74)
+        school_tab(date, msu, 'MSU', 450)
+        school_tab(date, unh, 'UNH', 26)
+        school_tab(date, tamu, 'TAMU', 50)
+        school_tab(date, wku, 'WKU', 257)
+        school_tab(date, uwlax, 'UWLAX', 246)
+        school_tab(date, desu, 'DESU', 11)
+        school_tab(date, tamiu, 'TAMIU', 13)
+        school_tab(date, utep, 'UTEP', 19)
+        school_tab(date, wtamu, 'WTAMU', 10)
+        school_tab(date, fpu, 'FPU', 9)
 
+        wb2.save(monthly_spreadsheet)
+        wb3.save(jon_email_workbook)
+        wb1.close()
+        end = findNextCell()
+        total = end-start
+        print("\033[1;32mAll Done Transferring Students!\033[0;0m")
+        print("\033[1;32m{} \033[0;0mwere transferred".format(total))
+        doubles = findDoubleStudent(month)
+        return total, doubles
+    except:
+        return 'Something went wrong', ''
+        print('Something went wrong :-(')
+
+
+# runProgram('10')
 
 # findNextCellPete(auburn)
 # set_pricing_cci('Veteriary Assistant')

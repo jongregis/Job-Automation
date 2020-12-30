@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
-
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
+from database.database import execute_query, connection
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/ECA ALL SCHOOLS MONTHLY SS.xlsx"
 
 
@@ -10,8 +10,15 @@ wb2 = xl.load_workbook(monthly_spreadsheet)
 
 broward = wb1.worksheets[1]
 flagler = wb1.worksheets[5]
+schreiner = wb1.worksheets[3]
+mns = wb1.worksheets[4]
+east_ms = wb1['EAST MS CC']
+richmond = wb1['UNIV OF RICHMOND']
 
 monthly = wb2.worksheets[2]
+
+color_in_hex = schreiner['A32'].fill.start_color
+yellow = 'FFFFFF00'
 
 
 def findNextCell():
@@ -38,10 +45,11 @@ def school_tab(current_month, school, schoolString, rowNumber):
     for i in range(rowNumber, mr+1):
 
         c = school.cell(row=i, column=3).value
+        color_check = school.cell(row=i, column=3)
         name = school.cell(row=i, column=1).value
         last_number_row = num - 1
 
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c != "START DATE" and color_check.fill.start_color.index != yellow and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -57,13 +65,31 @@ def school_tab(current_month, school, schoolString, rowNumber):
 
                 monthly.cell(row=num, column=4).value = name
 
-                course = school.cell(row=i, column=7).value
+                if schoolString == "SCHREINER":
+                    course = school.cell(row=i, column=8).value
+                else:
+                    course = school.cell(row=i, column=7).value
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
 
                 monthly.cell(row=num, column=9).value = schoolString
-                monthly.cell(row=num, column=set_pricing_column(
-                    schoolString)).value = school.cell(row=i, column=9).value
+                if schoolString == 'SCHREINER':
+                    price = school.cell(row=i, column=10).value
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = price
+                else:
+                    price = school.cell(row=i, column=9).value
+                    monthly.cell(row=num, column=set_pricing_column(
+                        schoolString)).value = price
+                first, last = name.split(' ', 1)
+                query = f"""
+                INSERT INTO Students (first, last, school, course, invoice_number, start_date, amount)
+                VALUES ('{first}', '{last}', '{schoolString}', '{course}', '{last_invoice_number+1}', '{date1}', '{price}');
+                """
+                try:
+                    execute_query(connection, query)
+                except Exception as e:
+                    print(e)
 
                 num += 1
 
@@ -79,14 +105,26 @@ def set_pricing_column(school):
         return 13
     elif school == "FLAGLER":
         return 12
+    elif school == "SCHREINER":
+        return 14
+    elif school == "MN State":
+        return 15
+    elif school == "East MS":
+        return 16
+    elif school == "Univ Richmond":
+        return 17
     else:
         print("\033[1;31mno school with that name \033[0;0m")
 
 
-def run_program_elearning():
+def run_program_elearning(date):
     start = findNextCell()
-    school_tab('06', broward, 'BROWARD', 36)
-    school_tab('06', flagler, 'FLAGLER', 9)
+    school_tab(date, broward, 'BROWARD', 36)
+    school_tab(date, flagler, 'FLAGLER', 9)
+    school_tab(date, schreiner, 'SCHREINER', 22)
+    school_tab(date, mns, 'MN State', 22)
+    school_tab(date, east_ms, 'East MS', 14)
+    school_tab(date, richmond, 'Univ Richmond', 30)
     wb2.save(monthly_spreadsheet)
     end = findNextCell()
     total = end-start

@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/ELearning Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
@@ -63,6 +63,10 @@ def move_to_setup_sheet():
         invoice_number = monthly.cell(row=i, column=11).value
         broward_price = monthly.cell(row=i, column=13).value
         flagler_price = monthly.cell(row=i, column=12).value
+        schreiner_price = monthly.cell(row=i, column=14).value
+        mns_price = monthly.cell(row=i, column=15).value
+        east_ms_price = monthly.cell(row=i, column=16).value
+        richmond_price = monthly.cell(row=i, column=17).value
 
         if findName(name) != True:
 
@@ -77,6 +81,14 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = flagler_price
             elif school == "BROWARD":
                 setup_sheet.cell(row=num, column=6).value = broward_price
+            elif school == "SCHREINER":
+                setup_sheet.cell(row=num, column=6).value = schreiner_price
+            elif school == "MN State":
+                setup_sheet.cell(row=num, column=6).value = mns_price
+            elif school == "East MS":
+                setup_sheet.cell(row=num, column=6).value = east_ms_price
+            elif school == "Univ Richmond":
+                setup_sheet.cell(row=num, column=6).value = richmond_price
             else:
                 print("School doesnt exist")
 

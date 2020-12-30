@@ -3,9 +3,9 @@ from datetime import datetime
 import os
 
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/June 2020.xlsx"
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
-lastMonth = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/May 2020.xlsx"
+
 wb1 = xl.load_workbook(monthly_spreadsheet)
 monthly = wb1.worksheets[0]
 
@@ -74,6 +74,10 @@ def move_to_setup_sheet():
         msu_price = monthly.cell(row=i, column=28).value
         unh_price = monthly.cell(row=i, column=31).value
         desu_price = monthly.cell(row=i, column=32).value
+        utep_price = monthly.cell(row=i, column=20).value
+        tamiu_price = monthly.cell(row=i, column=33).value
+        wtamu_price = monthly.cell(row=i, column=30).value
+        fpu_price = monthly.cell(row=i, column=24).value
 
         if findName(name) != True:
 
@@ -90,6 +94,8 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = met_price
             elif school == "AU M":
                 setup_sheet.cell(row=num, column=6).value = met_price
+            elif school == "TAMU M":
+                setup_sheet.cell(row=num, column=6).value = tamu_price
             elif school == "AU ED4":
                 setup_sheet.cell(row=num, column=6).value = ed4_price
             elif school == "WKU":
@@ -110,6 +116,18 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = unh_price
             elif school == "DESU":
                 setup_sheet.cell(row=num, column=6).value = desu_price
+            elif school == "TAMU ED4":
+                setup_sheet.cell(row=num, column=6).value = tamu_price
+            elif school == "DESU ED4":
+                setup_sheet.cell(row=num, column=6).value = desu_price
+            elif school == "UTEP":
+                setup_sheet.cell(row=num, column=6).value = utep_price
+            elif school == "TAMIU":
+                setup_sheet.cell(row=num, column=6).value = tamiu_price
+            elif school == "WTAMU":
+                setup_sheet.cell(row=num, column=6).value = wtamu_price
+            elif school == "FPU":
+                setup_sheet.cell(row=num, column=6).value = fpu_price
             else:
                 print("\033[1;31mSchool doesnt exist!\033[0;0m")
 
@@ -117,8 +135,11 @@ def move_to_setup_sheet():
 
 
 def nameCleaner(x):
-    if 'LAPTOP' in x:
+    if '-LAPTOP' in x:
         name, laptop = x.split('-LAPTOP')
+        return name
+    elif 'LAPTOP' in x:
+        name, laptop = x.split('LAPTOP')
         return name
     else:
         return x

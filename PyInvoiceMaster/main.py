@@ -1,4 +1,4 @@
-from .sampleInvoice import create_invoice
+from .sampleInvoice import create_invoice, create_invoice_Ed4, create_invoice_PSF
 from .e_learning_invoice import create_invoice_ELearning
 from .pp_Invoice import create_invoice_PrivatePay
 import openpyxl as xl
@@ -30,8 +30,19 @@ def excel_to_pdf():
         school = data_sheet.cell(row=i, column=4).value
         invoice_number = data_sheet.cell(row=i, column=5).value
         total = data_sheet.cell(row=i, column=6).value
-        create_invoice(start_date, name, description,
-                       total, '', school, invoice_number)
+        if school == 'DESU ED4':
+            create_invoice_Ed4(start_date, name, description,
+                               total, '', school, invoice_number)
+        elif school == 'TAMU M':
+            create_invoice_PSF(start_date, name, description,
+                               total, '', school, invoice_number)
+        elif school == 'TAMU ED4':
+            school = 'TAMUT'
+            create_invoice_PSF(start_date, name, description,
+                               total, '', school, invoice_number)
+        else:
+            create_invoice(start_date, name, description,
+                           total, '', school, invoice_number)
 
     print("MYCAA PDF Inovices Done!")
 
@@ -62,10 +73,14 @@ def excel_to_pdf_PrivatePay():
         name = privatePay_sheet.cell(row=i, column=2).value
         description = privatePay_sheet.cell(row=i, column=3).value
         school = privatePay_sheet.cell(row=i, column=4).value
+        if 'CA' in school:
+            prog_type = 'CA'
+        else:
+            prog_type = 'PP'
         invoice_number = privatePay_sheet.cell(row=i, column=5).value
         total = privatePay_sheet.cell(row=i, column=6).value
         create_invoice_PrivatePay(start_date, name, description,
-                                  total, '', school, invoice_number)
+                                  total, '', school, invoice_number, prog_type)
         print(name)
 
     print("Private Pay PDF Inovices Done!")
