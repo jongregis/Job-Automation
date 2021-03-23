@@ -4,10 +4,10 @@ from .template import SimpleInvoice
 from dateutil.relativedelta import *
 
 
-def create_invoice_PrivatePay(start_date, name, description, tuition, percentage, school, invoice_number, prog_type):
+def create_invoice_PrivatePay(start_date, name, description, tuition, percentage, school, invoice_number):
 
     doc = SimpleInvoice(
-        f'/Users/jongregis/Python/JobAutomation/practice invoices/PP Invoices/{prog_type} {invoice_number} {name} ({school}).pdf')
+        f'/Users/jongregis/Python/JobAutomation/practice invoices/PP Invoices/{invoice_number} {name} ({school}).pdf')
 
     # Paid stamp, optional
     doc.is_paid = 'ECA'
@@ -73,5 +73,5 @@ def create_invoice_PrivatePay(start_date, name, description, tuition, percentage
     doc.finish()
 
 
-# create_invoice_PrivatePay('3/18/2020', 'Hope Dike',
-#                           'Project management Professional', 1922, '', 'DESU', '196', 'PP')
+# create_invoice_PrivatePay('2/12/2021', 'Keyla Vasquez',
+#                           'Opthalmic Assistant Specialist', 2962.50, '', 'AU', 'PP60')

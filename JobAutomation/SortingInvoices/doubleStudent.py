@@ -13,7 +13,7 @@ def nameCleaner(x):
 
 
 def findDoubleStudent(month):
-    monthly_spreadsheet = f"/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/{month} 2020.xlsx"
+    monthly_spreadsheet = f"/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2021 Enrollment/{month} 2021.xlsx"
     wb1 = xl.load_workbook(monthly_spreadsheet)
     monthly = wb1.worksheets[0]
     name_list = dict({})
@@ -39,4 +39,4 @@ def findDoubleStudent(month):
 
 
 if __name__ == '__main__':
-    findDoubleStudent()
+    findDoubleStudent('Jan')

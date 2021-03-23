@@ -1,7 +1,8 @@
 import openpyxl as xl
 from datetime import datetime
 from database.database import execute_query, connection
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
+from JobAutomation.data import monthly_spreadsheet
+
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/ECA ALL SCHOOLS MONTHLY SS.xlsx"
 
 
@@ -14,6 +15,8 @@ schreiner = wb1.worksheets[3]
 mns = wb1.worksheets[4]
 east_ms = wb1['EAST MS CC']
 richmond = wb1['UNIV OF RICHMOND']
+cleveland = wb1['CLEVELAND STATE UNIV.']
+green_river = wb1['GREEN RIVER COLLEGE']
 
 monthly = wb2.worksheets[2]
 
@@ -37,7 +40,7 @@ def findName(name):
             return True
 
 
-def school_tab(current_month, school, schoolString, rowNumber):
+def school_tab(current_month, school, schoolString, rowNumber, year):
     mr = school.max_row
     mc = school.max_column
     num = findNextCell()
@@ -49,7 +52,7 @@ def school_tab(current_month, school, schoolString, rowNumber):
         name = school.cell(row=i, column=1).value
         last_number_row = num - 1
 
-        if c != None and c != "START DATE" and color_check.fill.start_color.index != yellow and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c != "START DATE" and color_check.fill.start_color.index != yellow and c.strftime('%Y') == year and c.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -113,18 +116,24 @@ def set_pricing_column(school):
         return 16
     elif school == "Univ Richmond":
         return 17
+    elif school == "Cleveland":
+        return 18
+    elif school == "Green River":
+        return 19
     else:
         print("\033[1;31mno school with that name \033[0;0m")
 
 
-def run_program_elearning(date):
+def run_program_elearning(date, year):
     start = findNextCell()
-    school_tab(date, broward, 'BROWARD', 36)
-    school_tab(date, flagler, 'FLAGLER', 9)
-    school_tab(date, schreiner, 'SCHREINER', 22)
-    school_tab(date, mns, 'MN State', 22)
-    school_tab(date, east_ms, 'East MS', 14)
-    school_tab(date, richmond, 'Univ Richmond', 30)
+    school_tab(date, broward, 'BROWARD', 36, year)
+    school_tab(date, flagler, 'FLAGLER', 9, year)
+    school_tab(date, schreiner, 'SCHREINER', 22, year)
+    school_tab(date, mns, 'MN State', 22, year)
+    school_tab(date, east_ms, 'East MS', 14, year)
+    school_tab(date, richmond, 'Univ Richmond', 30, year)
+    school_tab(date, cleveland, 'Cleveland', 11, year)
+    school_tab(date, green_river, 'Green River', 17, year)
     wb2.save(monthly_spreadsheet)
     end = findNextCell()
     total = end-start

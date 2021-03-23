@@ -73,14 +73,11 @@ def excel_to_pdf_PrivatePay():
         name = privatePay_sheet.cell(row=i, column=2).value
         description = privatePay_sheet.cell(row=i, column=3).value
         school = privatePay_sheet.cell(row=i, column=4).value
-        if 'CA' in school:
-            prog_type = 'CA'
-        else:
-            prog_type = 'PP'
+
         invoice_number = privatePay_sheet.cell(row=i, column=5).value
         total = privatePay_sheet.cell(row=i, column=6).value
         create_invoice_PrivatePay(start_date, name, description,
-                                  total, '', school, invoice_number, prog_type)
+                                  total, '', school, invoice_number)
         print(name)
 
     print("Private Pay PDF Inovices Done!")

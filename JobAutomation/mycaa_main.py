@@ -1,24 +1,24 @@
 import openpyxl as xl
 from datetime import datetime
+import traceback
+import time
 import dropbox
 import os
-from difflib import SequenceMatcher
 import Levenshtein
 from JobAutomation.SortingInvoices.doubleStudent import findDoubleStudent
-from JobAutomation.data import cci_programs, commission, au_programs, met_programs, uwlax_programs, csu_programs, tamut_ed4_programs
+from JobAutomation.data import cci_programs, commission, au_programs, met_programs, uwlax_programs, csu_programs, tamut_ed4_programs, monthly_spreadsheet
 from database.database import execute_query, connection
 
 dbx = dropbox.Dropbox(
-    'sl.AivXQjpwtsO_DWuuKqUU0r99wY59YvNacYsA3wbjSF4nrP86A_VXya0M3Fh8IOK8-5iCZXKL4Jv-Kzjw6Q9xXaT7g5h5RZWf9Gyh613v4JK_amf1SpIXNyZeDukP3h-asd_ALiAAhrM')
+    'ucQp1NoOMzUAAAAAAAAAAXYCaTDU29D37vRXCkCwyQ0ep9kcdLbvHFjExMYzesBT')
 
 jon_email_workbook = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Letters to students/Weekly Email for Lisa/Jon weekly email list.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 
 # assert os.path.exists(pete_spreadsheet)
-
+start_time = time.time()
 # fileName = 'test1.xlsx'
-wb1 = xl.load_workbook(pete_spreadsheet)
+wb1 = xl.load_workbook(pete_spreadsheet, read_only=True)
 auburn = wb1["AUBURN & TJC"]
 clemson = wb1["CLEMSON"]
 csu = wb1["COLUMBIA SOUTHERN"]
@@ -28,7 +28,7 @@ unh = wb1["NEW HAMPSHIRE"]
 tamu = wb1["TAMUT"]
 wku = wb1["WESTERN KENTUCKY"]
 utep = wb1["UTEP"]
-uwlax = wb1["WISONSIN "]
+uwlax = wb1["WISCONSIN (UWLAX)"]
 desu = wb1["DESU-MyCAA"]
 tamiu = wb1["Texas A&M Interntional"]
 wtamu = wb1["WEST TX A & M"]
@@ -95,21 +95,25 @@ def findMissingClass(dictionary, wrong):
         return dictionary[name]
 
 
-def auburn_students(current_month):
-    mr = auburn.max_row
-    mc = auburn.max_column
+def auburn_students(current_month, year):
+
     num = findNextCell()
     num1 = findNextCellJonEmail()
 
-    for i in range(6060, mr+1):
+    for rowidx, row in enumerate(auburn.rows):
 
-        c = auburn.cell(row=i, column=3).value
-
-        name = auburn.cell(row=i, column=9).value
+        date = row[2].value
+        address = row[6].value
+        email = row[7].value
+        name = row[8].value
+        laptop = row[9].value
+        course = row[10].value
+        rep = row[12].value
+        vender = row[13].value
 
         last_number_row = num - 1
 
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if date and not isinstance(date, str) and date.strftime('%Y') == year and date.strftime('%m') == current_month:
             if findName(name) != True:
 
                 # place invoice number
@@ -117,17 +121,16 @@ def auburn_students(current_month):
                     row=last_number_row, column=11).value
                 monthly.cell(row=num, column=11).value = last_invoice_number+1
                 # place first date
-                date1 = auburn.cell(row=i, column=1).value
+                date1 = row[0].value
                 date1 = date1.strftime('%m') + '/' + \
                     date1.strftime('%d') + '/' + date1.strftime('%-y')
                 monthly.cell(row=num, column=2).value = date1
 
-                date2 = auburn.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
+                date = date.strftime('%m') + '/' + \
+                    date.strftime('%d') + '/' + date.strftime('%-y')
+                monthly.cell(row=num, column=3).value = date
 
-                date3 = auburn.cell(row=i, column=4).value
+                date3 = row[3].value
                 res = isinstance(date3, datetime)
 
                 if res:
@@ -137,25 +140,21 @@ def auburn_students(current_month):
                 else:
                     jon_sheet.cell(row=num1, column=3).value = date3
 
-                address = auburn.cell(row=i, column=7).value
                 monthly.cell(row=num, column=14).value = address
 
-                email = auburn.cell(row=i, column=8).value
                 jon_sheet.cell(row=num1, column=2).value = email
 
-                if 'LAPTOP' in name:
+                if laptop == 'Y':
                     monthly.cell(row=num, column=8).value = 'x'
                 monthly.cell(row=num, column=4).value = name
                 jon_sheet.cell(row=num1, column=1).value = name
 
-                course = auburn.cell(row=i, column=10).value
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
 
                 # code = auburn.cell(row=i, column=11).value
                 # monthly.cell(row=num, column=9).value = code
 
-                rep = auburn.cell(row=i, column=12).value
                 rep = rep.strip().lower()
                 monthly.cell(row=num, column=6).value = rep
 
@@ -170,7 +169,6 @@ def auburn_students(current_month):
                     monthly.cell(
                         row=num, column=7).value = set_commission(course)
 
-                vender = auburn.cell(row=i, column=13).value
                 jon_sheet.cell(row=num1, column=4).value = vender
                 if vender == 'CCI':
                     if course in au_programs:
@@ -198,94 +196,94 @@ def auburn_students(current_month):
                     monthly.cell(row=num, column=set_pricing_column(
                         'AU ED4')).value = set_pricing_met(course)
                     price = set_pricing_met(course)
-                name = nameCleaner(name)
-                first, last = name.split(' ', 1)
-                query = f"""
-                INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
-                VALUES ('{first}', '{last}', '{school}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date2}', '{price}');
-                """
-                try:
-                    execute_query(connection, query)
-                except Exception as e:
-                    print(e)
+                # name = nameCleaner(name)
+                # first, last = name.split(' ', 1)
+                # query = f"""
+                # INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
+                # VALUES ('{first}', '{last}', '{school}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date}', '{price}');
+                # """
+                # try:
+                #     execute_query(connection, query)
+                # except Exception as e:
+                #     print(e)
 
                 num += 1
                 num1 += 1
 
     wb2.save(monthly_spreadsheet)
+    wb3.save(jon_email_workbook)
 
 
 # -----------------------------------------------------------------------------Other Schools-----------------
 
-
-def school_tab(current_month, school, schoolString, rowNumber):
+def school_tab(current_month, school, schoolString, year):
     mr = school.max_row
     mc = school.max_column
     num = findNextCell()
     num1 = findNextCellJonEmail()
 
-    for i in range(rowNumber, mr+1):
+    for rowidx, row in enumerate(school.rows):
+        date = row[2].value
+        address = row[6].value
+        email = row[7].value
+        name = row[8].value
+        laptop = row[9].value
+        course = row[10].value
+        rep = row[12].value
+        vender = row[13].value
 
-        c = school.cell(row=i, column=3).value
         if schoolString == 'TAMIU':
-            name = school.cell(row=i, column=8).value
-        else:
-            name = school.cell(row=i, column=9).value
+            name = row[7].value
 
         last_number_row = num - 1
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if date and not isinstance(date, str) and date.strftime('%Y') == year and date.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
                     row=last_number_row, column=11).value
                 monthly.cell(row=num, column=11).value = last_invoice_number+1
                 # place first date
-                date1 = school.cell(row=i, column=1).value
+                date1 = row[0].value
                 date1 = date1.strftime('%m') + '/' + \
                     date1.strftime('%d') + '/' + date1.strftime('%-y')
                 monthly.cell(row=num, column=2).value = date1
 
-                date2 = school.cell(row=i, column=3).value
-                date2 = date2.strftime('%m') + '/' + \
-                    date2.strftime('%d') + '/' + date2.strftime('%-y')
-                monthly.cell(row=num, column=3).value = date2
+                date = date.strftime('%m') + '/' + \
+                    date.strftime('%d') + '/' + date.strftime('%-y')
+                monthly.cell(row=num, column=3).value = date
 
-                date3 = school.cell(row=i, column=4).value
+                date3 = row[3].value
                 date3 = date3.strftime('%m') + '/' + \
                     date3.strftime('%d') + '/' + date3.strftime('%-y')
                 jon_sheet.cell(row=num1, column=3).value = date3
 
                 if schoolString == 'UTEP' or schoolString == 'WTAMU':
-                    address = school.cell(row=i, column=8).value
+                    address = row[7].value
+
                 elif schoolString == 'TAMIU':
-                    address = school.cell(row=i, column=9).value
-                else:
-                    address = school.cell(row=i, column=7).value
+                    address = row[10].value
+
                 monthly.cell(row=num, column=14).value = address
 
                 if schoolString == 'UTEP' or schoolString == 'TAMIU' or schoolString == 'WTAMU':
-                    email = school.cell(row=i, column=7).value
-                else:
-                    email = school.cell(row=i, column=8).value
+                    email = row[6].value
+                if schoolString == 'TAMIU':
+                    email = row[7].value
+
                 jon_sheet.cell(row=num1, column=2).value = email
 
-                if 'LAPTOP' in name:
+                if laptop == 'Y':
                     monthly.cell(row=num, column=8).value = 'x'
                 monthly.cell(row=num, column=4).value = name
                 jon_sheet.cell(row=num1, column=1).value = name
 
-                course = school.cell(row=i, column=10).value
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
 
-                code = school.cell(row=i, column=11).value
-                monthly.cell(row=num, column=9).value = code
-
                 # checks the rep column for school
                 if schoolString == 'UNH':
-                    rep = school.cell(row=i, column=13).value
-                else:
-                    rep = school.cell(row=i, column=12).value
+                    rep = row[12].value
+
                 rep = rep.strip().lower()
                 monthly.cell(row=num, column=6).value = rep
 
@@ -300,7 +298,6 @@ def school_tab(current_month, school, schoolString, rowNumber):
                     monthly.cell(
                         row=num, column=7).value = set_commission(course)
 
-                vender = school.cell(row=i, column=13).value
                 jon_sheet.cell(row=num1, column=4).value = vender
                 monthly.cell(row=num, column=9).value = schoolString
 
@@ -331,21 +328,23 @@ def school_tab(current_month, school, schoolString, rowNumber):
                     monthly.cell(row=num, column=set_pricing_column(
                         schoolString)).value = set_pricing_cci(course)
                     price = set_pricing_cci(course)
-                name = nameCleaner(name)
-                first, last = name.split(' ', 1)
-                query = f"""
-                INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
-                VALUES ('{first}', '{last}', '{schoolString}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date2}', '{price}');
-                """
-                try:
-                    execute_query(connection, query)
-                except Exception as e:
-                    print(e)
+                # try:
+                #     name = nameCleaner(name)
+                #     first, last = name.split(' ', 1)
+                #     query = f"""
+                #     INSERT INTO Students (first, last, school, course, email, address, rep, invoice_number, start_date, amount)
+                #     VALUES ('{first}', '{last}', '{schoolString}', '{course}', '{email}', '{address}', '{rep}', '{last_invoice_number+1}', '{date}', '{price}');
+                #     """
+
+                #     execute_query(connection, query)
+                # except Exception as e:
+                #     print(f'Problem inserting to database: {e}')
 
                 num += 1
                 num1 += 1
 
     wb2.save(monthly_spreadsheet)
+    wb3.save(jon_email_workbook)
     print(schoolString)
 
 
@@ -458,24 +457,23 @@ def set_commission(course):
         print('')
 
 
-def runProgram(date, month):
+def runProgram(date, month, year):
     try:
-        print('starting')
         start = findNextCell()
-        auburn_students(date)
-        school_tab(date, clemson, 'CLEM', 450)
-        school_tab(date, csu, 'CSU', 96)
-        school_tab(date, lsu, 'LSU', 74)
-        school_tab(date, msu, 'MSU', 450)
-        school_tab(date, unh, 'UNH', 26)
-        school_tab(date, tamu, 'TAMU', 50)
-        school_tab(date, wku, 'WKU', 257)
-        school_tab(date, uwlax, 'UWLAX', 246)
-        school_tab(date, desu, 'DESU', 11)
-        school_tab(date, tamiu, 'TAMIU', 13)
-        school_tab(date, utep, 'UTEP', 19)
-        school_tab(date, wtamu, 'WTAMU', 10)
-        school_tab(date, fpu, 'FPU', 9)
+        auburn_students(date, year)
+        school_tab(date, clemson, 'CLEM', year)
+        school_tab(date, csu, 'CSU', year)
+        school_tab(date, lsu, 'LSU', year)
+        school_tab(date, msu, 'MSU', year)
+        school_tab(date, unh, 'UNH', year)
+        school_tab(date, tamu, 'TAMU', year)
+        school_tab(date, wku, 'WKU', year)
+        school_tab(date, uwlax, 'UWLAX', year)
+        school_tab(date, desu, 'DESU', year)
+        school_tab(date, tamiu, 'TAMIU', year)
+        school_tab(date, utep, 'UTEP', year)
+        school_tab(date, wtamu, 'WTAMU', year)
+        school_tab(date, fpu, 'FPU', year)
 
         wb2.save(monthly_spreadsheet)
         wb3.save(jon_email_workbook)
@@ -485,10 +483,12 @@ def runProgram(date, month):
         print("\033[1;32mAll Done Transferring Students!\033[0;0m")
         print("\033[1;32m{} \033[0;0mwere transferred".format(total))
         doubles = findDoubleStudent(month)
+        print(f'Time elapsed: {round(time.time()-start_time,2)} seconds')
         return total, doubles
-    except:
-        return 'Something went wrong', ''
-        print('Something went wrong :-(')
+    except Exception as e:
+        print('Something went wrong :-(', e)
+        print(traceback.format_exc())
+        return 'Something went wrong', e
 
 
 # runProgram('10')

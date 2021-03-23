@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
+from JobAutomation.data import monthly_spreadsheet
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 pete_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
 
 
@@ -31,7 +31,7 @@ def findName(name):
             return True
 
 
-def school_tab(current_month, school, schoolString, rowNumber):
+def school_tab(current_month, school, schoolString, rowNumber, year):
     mr = school.max_row
     mc = school.max_column
     num = findNextCell()
@@ -45,12 +45,18 @@ def school_tab(current_month, school, schoolString, rowNumber):
             name = school.cell(row=i, column=8).value
         last_number_row = num - 1
 
-        if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+        if c != None and c.strftime('%Y') == year and c.strftime('%m') == current_month:
             if findName(name) != True:
                 # place invoice number
                 last_invoice_number = monthly.cell(
-                    row=last_number_row, column=11).value
-                monthly.cell(row=num, column=11).value = last_invoice_number+1
+                    row=last_number_row, column=11).value[2:]
+                if schoolString == 'CA':
+                    ca_num = 'CA'
+                    monthly.cell(
+                        row=num, column=11).value = f"CA{int(last_invoice_number)+1}"
+                else:
+                    monthly.cell(
+                        row=num, column=11).value = last_invoice_number+1
                 # place first date
                 date1 = school.cell(row=i, column=3).value
                 date1 = date1.strftime('%m') + '/' + \
@@ -59,7 +65,7 @@ def school_tab(current_month, school, schoolString, rowNumber):
                 monthly.cell(row=num, column=3).value = date1
 
                 monthly.cell(row=num, column=4).value = name
-                course = school.cell(row=i, column=9).value
+                course = school.cell(row=i, column=10).value
 
                 course = course.strip().lower()
                 monthly.cell(row=num, column=5).value = course
@@ -67,15 +73,19 @@ def school_tab(current_month, school, schoolString, rowNumber):
                 monthly.cell(row=num, column=9).value = schoolString
                 if schoolString == 'CA':
 
-                    misc = school.cell(row=i, column=13).value
+                    misc = school.cell(row=i, column=14).value
                     if misc == '?' or misc == None:
                         misc = '$3000 tuition'
-                    else:
-                        school_code = school.cell(row=i, column=10).value
-                        price, _, *rest = misc.split(' ')
-                        _, price = price.split('$')
+                    elif isinstance(misc, int):
+                        school_code = school.cell(row=i, column=11).value
                         monthly.cell(row=num, column=set_pricing_column(
-                            school_code)).value = (int(price) * .75)
+                            school_code)).value = (misc * .75)
+                    else:
+                        money, _ = misc.split(' ')
+                        _, misc = money.split('$')
+                        school_code = school.cell(row=i, column=11).value
+                        monthly.cell(row=num, column=set_pricing_column(
+                            school_code)).value = (int(misc) * .75)
                         monthly.cell(
                             row=num, column=9).value = f'CA {school_code}'
                 else:
@@ -140,10 +150,10 @@ cci_programs = dict({
     "welding program": 2050})
 
 
-def run_program_privatePay(date):
+def run_program_privatePay(date, year):
     start = findNextCell()
-    school_tab(date, DESU, 'DESU', 10)
-    school_tab(date, CA, 'CA', 13)
+    school_tab(date, DESU, 'DESU', 10, year)
+    school_tab(date, CA, 'CA', 13, year)
 
     wb2.save(monthly_spreadsheet)
     end = findNextCell()

@@ -47,26 +47,26 @@ def lambda_handler(event, context):
 
     time_start = datetime.now().strftime("%H:%M:%S")
     print("Starting workbook load at " + time_start)
-    wb1 = xl.load_workbook(pete_spreadsheet)
+    wb1 = xl.load_workbook(pete_spreadsheet, read_only=True)
     wb2 = xl.load_workbook(monthly_spreadsheet)
     wb3 = xl.load_workbook(jon_email_workbook)
     time_end = datetime.now().strftime("%H:%M:%S")
     print('Load finished at ' + time_end)
 
-    auburn = wb1.worksheets[0]
-    clemson = wb1.worksheets[1]
-    csu = wb1.worksheets[2]
-    lsu = wb1.worksheets[3]
-    msu = wb1.worksheets[4]
-    unh = wb1.worksheets[5]
-    tamu = wb1.worksheets[7]
-    wku = wb1.worksheets[8]
-    utep = wb1.worksheets[9]
-    uwlax = wb1.worksheets[10]
-    desu = wb1.worksheets[12]
-    tamiu = wb1.worksheets[14]
-    utep = wb1.worksheets[9]
-    wtamu = wb1.worksheets[15]
+    auburn = wb1["AUBURN & TJC"]
+    clemson = wb1["CLEMSON"]
+    csu = wb1["COLUMBIA SOUTHERN"]
+    lsu = wb1["LOUISIANA STATE"]
+    msu = wb1["MONTANA STATE"]
+    unh = wb1["NEW HAMPSHIRE"]
+    tamu = wb1["TAMUT"]
+    wku = wb1["WESTERN KENTUCKY"]
+    utep = wb1["UTEP"]
+    uwlax = wb1["WISONSIN "]
+    desu = wb1["DESU-MyCAA"]
+    tamiu = wb1["Texas A&M Interntional"]
+    wtamu = wb1["WEST TX A & M"]
+    fpu = wb1["FRESNO PACIFIC"]
     monthly = wb2.worksheets[0]
     jon_sheet = wb3.active
 
@@ -142,20 +142,23 @@ def lambda_handler(event, context):
             return "There are double students"
 
     def auburn_students(current_month):
-        mr = auburn.max_row
-        mc = auburn.max_column
+
         num = findNextCell()
         num1 = findNextCellJonEmail()
 
-        for i in range(6060, mr+1):
+        for rowidx, row in enumerate(auburn.rows):
 
-            c = auburn.cell(row=i, column=3).value
-
-            name = auburn.cell(row=i, column=9).value
+            date = row[2].value
+            address = row[6].value
+            email = row[7].value
+            name = row[8].value
+            course = row[9].value
+            rep = row[11].value
+            vender = row[12].value
 
             last_number_row = num - 1
 
-            if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+            if date and not isinstance(date, str) and date.strftime('%Y') == '2020' and date.strftime('%m') == current_month:
                 if findName(name) != True:
 
                     # place invoice number
@@ -164,17 +167,16 @@ def lambda_handler(event, context):
                     monthly.cell(
                         row=num, column=11).value = last_invoice_number+1
                     # place first date
-                    date1 = auburn.cell(row=i, column=1).value
+                    date1 = row[0].value
                     date1 = date1.strftime('%m') + '/' + \
                         date1.strftime('%d') + '/' + date1.strftime('%-y')
                     monthly.cell(row=num, column=2).value = date1
 
-                    date2 = auburn.cell(row=i, column=3).value
-                    date2 = date2.strftime('%m') + '/' + \
-                        date2.strftime('%d') + '/' + date2.strftime('%-y')
-                    monthly.cell(row=num, column=3).value = date2
+                    date = date.strftime('%m') + '/' + \
+                        date.strftime('%d') + '/' + date.strftime('%-y')
+                    monthly.cell(row=num, column=3).value = date
 
-                    date3 = auburn.cell(row=i, column=4).value
+                    date3 = row[3].value
                     res = isinstance(date3, datetime)
 
                     if res:
@@ -184,10 +186,8 @@ def lambda_handler(event, context):
                     else:
                         jon_sheet.cell(row=num1, column=3).value = date3
 
-                    address = auburn.cell(row=i, column=7).value
                     monthly.cell(row=num, column=14).value = address
 
-                    email = auburn.cell(row=i, column=8).value
                     jon_sheet.cell(row=num1, column=2).value = email
 
                     if 'LAPTOP' in name:
@@ -195,14 +195,12 @@ def lambda_handler(event, context):
                     monthly.cell(row=num, column=4).value = name
                     jon_sheet.cell(row=num1, column=1).value = name
 
-                    course = auburn.cell(row=i, column=10).value
                     course = course.strip().lower()
                     monthly.cell(row=num, column=5).value = course
 
                     # code = auburn.cell(row=i, column=11).value
                     # monthly.cell(row=num, column=9).value = code
 
-                    rep = auburn.cell(row=i, column=12).value
                     rep = rep.strip().lower()
                     monthly.cell(row=num, column=6).value = rep
 
@@ -217,26 +215,33 @@ def lambda_handler(event, context):
                         monthly.cell(
                             row=num, column=7).value = set_commission(course)
 
-                    vender = auburn.cell(row=i, column=13).value
                     jon_sheet.cell(row=num1, column=4).value = vender
                     if vender == 'CCI':
                         if course in au_programs:
                             monthly.cell(row=num, column=9).value = 'AU'
+                            school = 'AU'
                             monthly.cell(
                                 row=num, column=set_pricing_column(
                                     'AU')).value = set_pricing_au(course)
+                            price = set_pricing_au(course)
                         elif course not in au_programs:
                             monthly.cell(row=num, column=9).value = 'MET'
+                            school = 'MET'
                             monthly.cell(row=num, column=set_pricing_column(
                                 'MET')).value = set_pricing_met(course)
+                            price = set_pricing_met(course)
                     elif vender == 'Pete Medd':
                         monthly.cell(row=num, column=9).value = 'AU M'
+                        school = 'AU M'
                         monthly.cell(row=num, column=set_pricing_column(
                             'MET')).value = set_pricing_met(course)
+                        price = set_pricing_met(course)
                     else:
                         monthly.cell(row=num, column=9).value = 'AU ED4'
+                        school = 'AU ED4'
                         monthly.cell(row=num, column=set_pricing_column(
                             'AU ED4')).value = set_pricing_met(course)
+                        price = set_pricing_met(course)
 
                     num += 1
                     num1 += 1
@@ -246,21 +251,26 @@ def lambda_handler(event, context):
 
 # -----------------------------------------------------------------------------Other Schools-----------------
 
-    def school_tab(current_month, school, schoolString, rowNumber):
+    def school_tab(current_month, school, schoolString):
         mr = school.max_row
         mc = school.max_column
         num = findNextCell()
         num1 = findNextCellJonEmail()
 
-        for i in range(rowNumber, mr+1):
+        for rowidx, row in enumerate(school.rows):
+            date = row[2].value
+            address = row[6].value
+            email = row[7].value
+            name = row[8].value
+            course = row[9].value
+            rep = row[11].value
+            vender = row[12].value
 
-            c = school.cell(row=i, column=3).value
             if schoolString == 'TAMIU':
-                name = school.cell(row=i, column=8).value
-            else:
-                name = school.cell(row=i, column=9).value
+                name = row[7].value
+
             last_number_row = num - 1
-            if c != None and c.strftime('%Y') == '2020' and c.strftime('%m') == current_month:
+            if date and not isinstance(date, str) and date.strftime('%Y') == '2020' and date.strftime('%m') == current_month:
                 if findName(name) != True:
                     # place invoice number
                     last_invoice_number = monthly.cell(
@@ -268,33 +278,31 @@ def lambda_handler(event, context):
                     monthly.cell(
                         row=num, column=11).value = last_invoice_number+1
                     # place first date
-                    date1 = school.cell(row=i, column=1).value
+                    date1 = row[0].value
                     date1 = date1.strftime('%m') + '/' + \
                         date1.strftime('%d') + '/' + date1.strftime('%-y')
                     monthly.cell(row=num, column=2).value = date1
 
-                    date2 = school.cell(row=i, column=3).value
-                    date2 = date2.strftime('%m') + '/' + \
-                        date2.strftime('%d') + '/' + date2.strftime('%-y')
-                    monthly.cell(row=num, column=3).value = date2
+                    date = date.strftime('%m') + '/' + \
+                        date.strftime('%d') + '/' + date.strftime('%-y')
+                    monthly.cell(row=num, column=3).value = date
 
-                    date3 = school.cell(row=i, column=4).value
+                    date3 = row[3].value
                     date3 = date3.strftime('%m') + '/' + \
                         date3.strftime('%d') + '/' + date3.strftime('%-y')
                     jon_sheet.cell(row=num1, column=3).value = date3
 
                     if schoolString == 'UTEP' or schoolString == 'WTAMU':
-                        address = school.cell(row=i, column=8).value
+                        address = row[7].value
+
                     elif schoolString == 'TAMIU':
-                        address = school.cell(row=i, column=9).value
-                    else:
-                        address = school.cell(row=i, column=7).value
+                        address = row[8].value
+
                     monthly.cell(row=num, column=14).value = address
 
                     if schoolString == 'UTEP' or schoolString == 'TAMIU' or schoolString == 'WTAMU':
-                        email = school.cell(row=i, column=7).value
-                    else:
-                        email = school.cell(row=i, column=8).value
+                        email = row[6].value
+
                     jon_sheet.cell(row=num1, column=2).value = email
 
                     if 'LAPTOP' in name:
@@ -302,18 +310,13 @@ def lambda_handler(event, context):
                     monthly.cell(row=num, column=4).value = name
                     jon_sheet.cell(row=num1, column=1).value = name
 
-                    course = school.cell(row=i, column=10).value
                     course = course.strip().lower()
                     monthly.cell(row=num, column=5).value = course
 
-                    code = school.cell(row=i, column=11).value
-                    monthly.cell(row=num, column=9).value = code
-
                     # checks the rep column for school
                     if schoolString == 'UNH':
-                        rep = school.cell(row=i, column=13).value
-                    else:
-                        rep = school.cell(row=i, column=12).value
+                        rep = row[12].value
+
                     rep = rep.strip().lower()
                     monthly.cell(row=num, column=6).value = rep
 
@@ -328,7 +331,6 @@ def lambda_handler(event, context):
                         monthly.cell(
                             row=num, column=7).value = set_commission(course)
 
-                    vender = school.cell(row=i, column=13).value
                     jon_sheet.cell(row=num1, column=4).value = vender
                     monthly.cell(row=num, column=9).value = schoolString
 
@@ -336,26 +338,34 @@ def lambda_handler(event, context):
                         monthly.cell(row=num, column=9).value = 'TAMU ED4'
                         monthly.cell(row=num, column=set_pricing_column(
                             'TAMU')).value = set_pricing_tamut_ed4(course)
+                        price = set_pricing_tamut_ed4(course)
                     elif vender == 'ED4O' and schoolString == 'DESU':
                         monthly.cell(row=num, column=9).value = 'DESU ED4'
                         monthly.cell(row=num, column=set_pricing_column(
                             'DESU')).value = set_pricing_met(course)
+                        price = set_pricing_met(course)
                     elif schoolString == 'CSU':
                         monthly.cell(row=num, column=set_pricing_column(
                             schoolString)).value = set_pricing_csu(course)
+                        price = set_pricing_csu(course)
                     elif schoolString == 'UWLAX':
                         monthly.cell(row=num, column=set_pricing_column(
                             schoolString)).value = set_pricing_uwlax(course)
+                        price = set_pricing_uwlax(course)
                     elif vender == 'Pete Medd' or vender == 'PETE MEDD':
                         monthly.cell(row=num, column=9).value = 'TAMU M'
                         monthly.cell(row=num, column=set_pricing_column(
                             schoolString)).value = set_pricing_cci(course)
+                        price = set_pricing_cci(course)
                     else:
                         monthly.cell(row=num, column=set_pricing_column(
                             schoolString)).value = set_pricing_cci(course)
-
+                        price = set_pricing_cci(course)
                     num += 1
                     num1 += 1
+
+        wb2.save(monthly_spreadsheet)
+        print(schoolString)
 
     def pete_commission():
         num = 0
@@ -368,29 +378,34 @@ def lambda_handler(event, context):
         try:
             start = findNextCell()
             auburn_students(date)
-            school_tab(date, clemson, 'CLEM', 450)
-            school_tab(date, csu, 'CSU', 96)
-            school_tab(date, lsu, 'LSU', 74)
-            school_tab(date, msu, 'MSU', 450)
-            school_tab(date, unh, 'UNH', 26)
-            school_tab(date, tamu, 'TAMU', 50)
-            school_tab(date, wku, 'WKU', 257)
-            school_tab(date, uwlax, 'UWLAX', 246)
-            school_tab(date, desu, 'DESU', 11)
-            school_tab(date, tamiu, 'TAMIU', 9)
-            school_tab(date, utep, 'UTEP', 9)
-            school_tab(date, wtamu, 'WTAMU', 10)
+            school_tab(date, clemson, 'CLEM')
+            school_tab(date, csu, 'CSU')
+            school_tab(date, lsu, 'LSU')
+            school_tab(date, msu, 'MSU')
+            school_tab(date, unh, 'UNH')
+            school_tab(date, tamu, 'TAMU')
+            school_tab(date, wku, 'WKU')
+            school_tab(date, uwlax, 'UWLAX')
+            school_tab(date, desu, 'DESU')
+            school_tab(date, tamiu, 'TAMIU')
+            school_tab(date, utep, 'UTEP')
+            school_tab(date, wtamu, 'WTAMU')
+            school_tab(date, fpu, 'FPU')
+
             wb2.save(monthly_spreadsheet)
             wb3.save(jon_email_workbook)
+            wb1.close()
             end = findNextCell()
             total = end-start
-            print("All Done Transferring Students!")
-            print(f"{total} were transferred")
-            doubles = findDoubleStudent()
+            print("\033[1;32mAll Done Transferring Students!\033[0;0m")
+            print("\033[1;32m{} \033[0;0mwere transferred".format(total))
+            doubles = findDoubleStudent(month)
+            # print(f'Time elapsed: {round(time.time()-start_time,2)} seconds')
             return total, doubles
-        except:
-            return 'Something went wrong', ''
-            print('Something went wrong :-(')
+        except Exception as e:
+            print('Something went wrong :-(', e)
+            # print(traceback.format_exc())
+            return 'Something went wrong', e
 
     students, double_students = runProgram(current_month)
     # s3.Bucket('jobautomation').upload_file(f'/tmp/{month} 2020.xlsx', f'{month} 2020(updated).xlsx')

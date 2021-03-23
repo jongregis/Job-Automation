@@ -2,11 +2,11 @@ from datetime import datetime, date
 from models import InvoiceInfo, ServiceProviderInfo, ClientInfo, Item, Transaction
 from templateMassage import SimpleInvoiceMassage
 from dateutil.relativedelta import *
-# from .pp_Invoice import create_invoice_PrivatePay
+from pp_Invoice import create_invoice_PrivatePay
 import openpyxl as xl
 
 
-massage_invoice_sheet = "/Users/jongregis/Desktop/MASSAGE MONTHLY SS for Jon-USE THIS.xlsx"
+massage_invoice_sheet = "/Users/jongregis/Desktop/MASSAGE MONTHLY SS for Jon-USE THIS-3.xlsx"
 monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Oct 2020.xlsx"
 
 wb1 = xl.load_workbook(massage_invoice_sheet)
@@ -16,10 +16,12 @@ payout_tab = wb1.active
 monthly = wb2.worksheets[1]
 mr = payout_tab.max_row
 
-color_in_hex = payout_tab['A323'].fill.start_color
+color_in_hex = payout_tab['A506'].fill.start_color.index
 green = 'FF92D050'
 gold = 'FFFFC000'
 blank = '00000000'
+pink = 5
+light_green = 6
 
 total = 0
 
@@ -74,9 +76,11 @@ def create_invoice_Massage(month, name, description, tuition, percentage, school
 
     # Add Item
 
-    for i in range(362, 399):
+    for i in range(615, 621):
         name = payout_tab.cell(row=i, column=1).value
         name_color = payout_tab.cell(row=i, column=1)
+        pif = payout_tab.cell(row=i, column=9).value
+        gillian = payout_tab.cell(row=i, column=8).value
         payment1 = payout_tab.cell(row=i, column=12)
         payment2 = payout_tab.cell(row=i, column=13)
         payment3 = payout_tab.cell(row=i, column=14)
@@ -94,12 +98,14 @@ def create_invoice_Massage(month, name, description, tuition, percentage, school
             continue
         elif 'INVOIICING' in name:
             continue
-        elif 'MYCAA' not in payment_type and 'SALLIE MAE' not in payment_type:
+        elif payment1.fill.start_color.index == pink:
+            continue
+        elif 'MYCAA':
             print(name)
             start_date = payout_tab.cell(row=i, column=4).value
             start_date = start_date.strftime('%m') + '/' + \
                 start_date.strftime('%d') + '/' + start_date.strftime('%-y')
-            if payment_type == "PRIVATE PAY-PIF(Paid in Full)":
+            if payment_type == "PRIVATE PAY-PIF(Paid in Full)" or "PETE" in payment_type:
                 tuition = int(tuition)
                 tuition = (tuition * 0.15) + 1250
                 doc.add_item(Item(start_date, name, tuition,
@@ -113,10 +119,11 @@ def create_invoice_Massage(month, name, description, tuition, percentage, school
                 tuition = 800
                 doc.add_item(Item(start_date, name, tuition,
                                   'AHCI-PIF'))
-            elif payment_type == "PAID IN FULL-PAID PETE MEDD":
-                tuition = (int(tuition) * 0.15)+450
+            elif pif.lower() == 'yes' and gillian == 'Yes':
+                tuition = payment1.value
                 doc.add_item(Item(start_date, name, tuition,
                                   'PIF GILLIAN'))
+
             elif payment1.fill.start_color.index == green and '?' not in payment1.value and payment2.fill.start_color.index != green:
                 amount, payment = payment1.value.split('(')
                 if '$' in amount:
@@ -189,7 +196,9 @@ def create_invoice_Massage(month, name, description, tuition, percentage, school
                 else:
                     doc.add_item(Item(start_date, name, amount,
                                       f'(5 of {check_payments(i)})'))
-        elif name_color.fill.start_color.index == green and 'SALLIE MAE' in payment_type:
+
+        elif name_color.fill.start_color.index == green and pif == 'Yessir':
+            continue
             if findName(name) != True:
                 num = findNextCell()
                 last_number_row = num - 1
@@ -229,6 +238,6 @@ def check_payments(row):
     return num
 
 
-create_invoice_Massage('11.1.20', '',
-                       '', '', '', '', '027')
+# create_invoice_Massage('2.1.21', '',
+#                        '', '', '', '', '031-3')
 # print(color_in_hex)

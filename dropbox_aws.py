@@ -4,11 +4,11 @@ import boto3
 import botocore
 
 dbx = dropbox.Dropbox(
-    'sl.AixhkuLr8hjE7msT47CXLU7AAXsVWB8Gr0jZMNtnQMLwoY2L5oaIQHngHiPyxzC26EssWzP7TZ4zqjlFWK2ciE1gm080szjoUS1_CUc3LM7NsWGczuKYROWwSejmegFhP3vhhQ1OUG8')
+    'ucQp1NoOMzUAAAAAAAAAAXYCaTDU29D37vRXCkCwyQ0ep9kcdLbvHFjExMYzesBT')
 s3 = boto3.resource('s3')
 # for x in dbx.files_list_folder('/ECA Back Office/JON').entries:
 #     print(x.name)
-data = "Potential headline: Game 4 a nail-biter as Warriors inch out Cavs"
+data = "Potential headline: Game 5 a nail-biter as Warriors inch out Cavs"
 overwrite = True
 mode = (dropbox.files.WriteMode.overwrite
         if overwrite
@@ -16,15 +16,15 @@ mode = (dropbox.files.WriteMode.overwrite
 # dbx.files_upload(data.encode('UTF-8'),
 #                  '/ECA Back Office/JON/story.xlsx', mode)
 
-pete = "/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
-try:
-    s3.Bucket('jobautomation').download_file(
-        'Sept 2020.xlsx', '/Users/jongregis/Desktop/Sept 2020.xlsx')
-except botocore.exceptions.ClientError as e:
-    if e.response['Error']['Code'] == "404":
-        print("The object does not exist.")
-    else:
-        raise
+# pete = "/ECA Back Office/Pete's Backup/MILTARY/PETE ALL 3 SPREADSHEETS MYCAA FOR STACEY AND LISA/MAIN ENROLLMENT FOLDER/SPREADSHEETS/students mycaa FINAL-TODAY.xlsx"
+# try:
+#     s3.Bucket('jobautomation').download_file(
+#         'Sept 2020.xlsx', '/Users/jongregis/Desktop/Sept 2020.xlsx')
+# except botocore.exceptions.ClientError as e:
+#     if e.response['Error']['Code'] == "404":
+#         print("The object does not exist.")
+#     else:
+#         raise
 
 
 def download_from_DB_to_S3(dbx, path, name):

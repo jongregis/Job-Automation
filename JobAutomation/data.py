@@ -1,3 +1,6 @@
+
+monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2021 Enrollment/March 2021.xlsx"
+
 cci_programs = dict({
     "accounting professional": 2016,
     "amazon web services with cloud practitioner": 2050,
@@ -10,9 +13,14 @@ cci_programs = dict({
     "clinical medical assistant": 1405,
     "clinical medical assistant with ob/gyn": 1405,
     "clinical medical assistant with pediatric specialist": 1405,
+    "clinical medical assistant with pediatrics": 1405,
     "clinical medical assistant with ob/gyn-spanish": 1405,
+    "clinical medical assistant (spanish)": 1405,
+    "Clinical Medical Assistant Master": 0,
     "computer technician (comp tia a+)": 2050,
     "computer security technician (comp tia security+ and network +)": 2050,
+    "computer support": 2050,
+    "contract specialist": 2015,
     "criminal investigation professional": 2051,
     "diesel technician": 2050,
     "dental assisting": 1825,
@@ -26,6 +34,7 @@ cci_programs = dict({
     "human resources professional": 2029,
     "it cyber security professional with comp tia security +": 2050,
     "it network professional with comptia netwrk+": 2050,
+    "legal assistant certificate program with externship": 1788,
     "medical administration assistance": 1250,
     "medical administrative assistant": 1250,
     "medical administrative assistant online": 1250,
@@ -37,6 +46,7 @@ cci_programs = dict({
     "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
     "massage practitioner program (500hr)": 3000,
     "massage practitioner program (750hr)": 3000,
+    "marketing professional": 1972,
     "organizational behavior professional": 2090,
     "paralegal professional": 1699,
     "paralegal certificate program": 1699,
@@ -47,8 +57,10 @@ cci_programs = dict({
     "phlebotomy tech -spanish": 1575,
     "photography entrepreneur with adobe certificate": 1850,
     "photography entrepreneur with adobe": 1850,
+    "physicians office assistant with ehrm": 1370,
     "Project management Professional": 1922,
     "Project Management Specialist for CAPM": 2033,
+    "six sigma black belt (cssbb)": 1702,
     "teachers aide": 2029,
     "veterinary assistant specialist": 1013,
     "welding technician": 2050})
@@ -93,8 +105,11 @@ commission = dict({
 au_programs = dict({
     "clinical medical assistant": 1405,
     "clinical medical assistant with ob/gyn": 1405,
+    "clinical medical assistant with obgyn": 1405,
     "Clinical Medical Assistant with OBGYN": 1405,
     "clinical medical assistant with pediatric specialist": 1405,
+    "clinical medical assistant with pediatrics": 1405,
+    "clinical medical assistant master with externship": 1405,
     "dental assisting": 1825,
     "ekg technician cert program": 1250,
     "electronic health records management (ehrm)": 1575,
@@ -104,6 +119,7 @@ au_programs = dict({
     "medical billing and coding with medical administrative assistant": 1370,
     "medical billing and coding with medical admin": 1370,
     "medical billing and coding with medical administration": 1370,
+    "medical billing & coding w/ medical administration": 1370,
     "medical billing & coding w/ medical administrative assistant certificate program includes cmaa and cpc national certification exams": 1370,
     "personal care assistant": 1575,
     "pharmacy technician": 1200,
@@ -137,6 +153,8 @@ met_programs = dict({
     "interior decorating and design entrepreneur": 2962.50,
     "it cyber security professional with comp tia security+": 2999.25,
     "it network professional with comptia network+": 2999.25,
+    "legal transcription specialist": 2962.50,
+    "legal assistant": 2849.25,
     "life skills coach": 2962.50,
     "massage practitioner program (500 hr)": 3000,
     "massage practitioner program (620 hr)": 3000,
@@ -184,6 +202,7 @@ uwlax_programs = dict({
 csu_programs = dict({
     "administrative assisitant with bookkeeping and quickbooks": 2999.25,
     "clinical medical assistant": 2962.50,
+    "human resources professional": 2999.25,
     "medical billing and coding": 2437.50,
     "medical billing and coding with medical administration": 2962.50,
     "paralegal": 2999.25,
@@ -192,5 +211,6 @@ csu_programs = dict({
 tamut_ed4_programs = dict({
     "interior decorating and design entrepreneur": 2999,
     "virtual assistant associate": 2999,
-    "medical inpatient auditing": 2750
+    "medical inpatient auditing": 2750,
+    "wellness & life skills coaching specialist": 2999
 })

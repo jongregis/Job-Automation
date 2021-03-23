@@ -43,25 +43,15 @@ def create_invoice_ECDC(start_date, name, description, tuition, percentage, scho
         percentage = '30%'
         tuition = 1000
 
-    # name_list = [
-    #     'Jyesia Powell',
-    #     'Paul Caple',
-    #     'Elijan Baitista',
-    #     'Karen Collins',
-    #     'Jonathan Hall',
-    #     'Ikiem Hall',
-    #     'Nambaramey Dy',
-    # ]
     name_list = [
-        'Anthony Coverdale',
-        'Joy Shey',
-        'Stephanie Goodman',
-        'Daron Handy',
+        'Patricia Coverdale'
     ]
-    # # Calculate Tuition
+    # food services [1415,70,15,1500] Food Services & Operations Cert Program w/ Customer Service Fundamentals
+    # hvac [3480,70,200,3750] HVAC Technician Cert Program
+    # Calculate Tuition
     for x in name_list:
         doc.add_item(Item(x, '1415', 70, '15'))
-    # doc.add_item(Item("April Johnson", '1255', 70, '425'))
+    # doc.add_item(Item('Paulette Vickie Lemon', '1255', 70, '425'))
 
     # Add Item
 
@@ -75,5 +65,6 @@ def create_invoice_ECDC(start_date, name, description, tuition, percentage, scho
     doc.finish()
 
 
-# create_invoice_ECDC('', 'Eastside Career Development Center',
-#                     'introduction to trades', 700, '', 'ECDC', '197')
+create_invoice_ECDC('', 'Eastside Career Development Center',
+                    'introduction to trades', 700, '', 'ECDC', '208')
+# emails to send to: esr@centralbaptistcdc.org, sbordrick@centralbaptistcdc.org

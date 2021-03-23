@@ -103,7 +103,8 @@ def create_invoice(start_date, name, description, tuition, percentage, school, i
 
     # Add Laptop if
     if int(tuition) < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
-        doc.add_item(Item('', 'Laptop', '90', ''))
+        if "PP" not in str(invoice_number):
+            doc.add_item(Item('', 'Laptop', '90', ''))
 
     # Tax rate, optional
     # doc.set_item_tax_rate(20)  # 20%
@@ -203,8 +204,8 @@ def create_invoice_PSF(start_date, name, description, tuition, percentage, schoo
     doc.add_item(Item(start_date, description, tuition, percentage))
 
     # Add Laptop if
-    if int(tuition) < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
-        doc.add_item(Item('', 'Laptop', '90', ''))
+    # if int(tuition) < 1650 or school != 'UWLAX' and description == "dental assisting certification" or description == "dental assisting" and school != 'UWLAX':
+    #     doc.add_item(Item('', 'Laptop', '90', ''))
 
     # Tax rate, optional
     # doc.set_item_tax_rate(20)  # 20%
@@ -323,5 +324,5 @@ def create_invoice_Ed4(start_date, name, description, tuition, percentage, schoo
     doc.finish()
 
 
-# create_invoice('12/14/2020', 'Hunter Kautz',
-#                'electronic health records management (ehrm)', 1575, '', 'AU', 9566)
+# create_invoice('2/15/2021', 'Tatiana Smith',
+#                'professional bookkeeping with quickbooks', 2849.25, '', 'MET', '9903')

@@ -1,7 +1,7 @@
 import openpyxl as xl
 from datetime import datetime
+from JobAutomation.data import monthly_spreadsheet
 
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/ELearning Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
@@ -67,6 +67,8 @@ def move_to_setup_sheet():
         mns_price = monthly.cell(row=i, column=15).value
         east_ms_price = monthly.cell(row=i, column=16).value
         richmond_price = monthly.cell(row=i, column=17).value
+        cleveland_price = monthly.cell(row=i, column=18).value
+        green_river_price = monthly.cell(row=i, column=19).value
 
         if findName(name) != True:
 
@@ -89,6 +91,10 @@ def move_to_setup_sheet():
                 setup_sheet.cell(row=num, column=6).value = east_ms_price
             elif school == "Univ Richmond":
                 setup_sheet.cell(row=num, column=6).value = richmond_price
+            elif school == "Cleveland":
+                setup_sheet.cell(row=num, column=6).value = cleveland_price
+            elif school == "Green River":
+                setup_sheet.cell(row=num, column=6).value = green_river_price
             else:
                 print("School doesnt exist")
 
