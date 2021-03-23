@@ -1,6 +1,8 @@
 practice invoices
 PyInvoiceMaster/FINAL NEW LOGO FOR ECA.png
 PyInvoiceMaster/__pycache__
+PyInvoiceMaster/771 Cool Creek Rd LLC Logo.png
+PyInvoiceMaster/PSF LOGO 2019.png
 
 JobAutomation/Automatic Bulk File Creator in VBA.xlsm
 JobAutomation/Automatic-Bulk-File-Creator-in-VBA.zip
@@ -11,8 +13,12 @@ JobAutomation/MYCAA Automation.xlsm
 JobAutomation/test1.xlsx
 JobAutomation/test2.xlsx
 JobAutomation/__pycache__
-Lambda
+JobAutomation/PP Automation.xlsm
+
+.DS_Store
+run.py
 dropbox_aws.py
+
 
 
 
