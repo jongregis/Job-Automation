@@ -60,5 +60,5 @@ def create_invoice_ELearning(start_date, name, description, tuition, percentage,
     doc.finish()
 
 
-create_invoice_ELearning('12/28/2020', 'Hanieh Mansouri',
-                         'Certified Professional in Distribution and Warehousing', 1225, '', 'ECDC', 32)
+# create_invoice_ELearning('12/28/2020', 'Hanieh Mansouri',
+#                          'Certified Professional in Distribution and Warehousing', 1225, '', 'ECDC', 32)

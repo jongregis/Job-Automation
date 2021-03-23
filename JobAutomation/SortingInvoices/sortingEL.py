@@ -25,5 +25,5 @@ if correct == 'y':
     for f in os.listdir():
         if f == '.DS_Store':
             continue
-        if 'BROWARD' in f or 'SCHREINER' in f or 'MN State' or 'East MS' in f:
+        if 'BROWARD' in f or 'SCHREINER' in f or 'MN State' or 'East MS' in f or 'Univ Richmond' in f:
             shutil.move(f, Elearning)

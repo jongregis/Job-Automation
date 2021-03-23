@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
         self.actionExit.setText(_translate("MainWindow", "Exit"))
 
     def clickedCollectStudentsMYCAA(self):
-        runProgram('12', 'Dec')
+        runProgram('03', 'March', '2021')
 
     def clickedDockingStudentsMYCAA(self):
         run_docking_invoices()
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
 # Elearning
 
     def clickedCollectStudentsElearning(self):
-        run_program_elearning('12')
+        run_program_elearning('03', '2021')
 
     def clickedDockingStudentsElearning(self):
         run_docking_invoices_elearning()
@@ -164,7 +164,7 @@ class Ui_MainWindow(object):
 
 # Private Pay
     def clickedCollectStudentsPrivatePay(self):
-        run_program_privatePay('12')
+        run_program_privatePay('03', '2021')
 
     def clickedDockingStudentsPrivatePay(self):
         run_docking_invoices_privatePay()
@@ -174,13 +174,13 @@ class Ui_MainWindow(object):
 
 
 if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-    # runProgram('11')
-    # run_program_elearning('11')
-    # run_program_privatePay('11')
+    # import sys
+    # app = QtWidgets.QApplication(sys.argv)
+    # MainWindow = QtWidgets.QMainWindow()
+    # ui = Ui_MainWindow()
+    # ui.setupUi(MainWindow)
+    # MainWindow.show()
+    # sys.exit(app.exec_())
+    # runProgram('03', 'March', '2021')
+    # run_program_elearning('03', '2021')
+    run_program_privatePay('03', '2021')

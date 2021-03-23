@@ -1,9 +1,8 @@
 import openpyxl as xl
 from datetime import datetime
 import os
+from JobAutomation.data import monthly_spreadsheet
 
-
-monthly_spreadsheet = "/Volumes/SanDisk Extreme SSD/Dropbox (ECA Consulting)/ECA Back Office/Lisa's Backup/Invoices/2020 Enrollment/Dec 2020.xlsx"
 mycaa_invoice = "/Users/jongregis/Python/JobAutomation/JobAutomation/MYCAA Automation.xlsm"
 
 wb1 = xl.load_workbook(monthly_spreadsheet)
